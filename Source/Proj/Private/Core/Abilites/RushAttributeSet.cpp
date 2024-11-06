@@ -2,8 +2,10 @@
 
 
 #include "Core/Abilites/RushAttributeSet.h"
-
+#include "RushCharacter.h"
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
+
 
 void URushAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -20,19 +22,19 @@ void URushAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 {
 	Super::PreAttributeChange(Attribute, NewValue);
 	
-	/**	if(Attribute == GetMaxHealthAttribute())
-	{
-		//AdjustAttributeForMaxChange(Health, MaxHealth, NewValue, GetHealthAttribute());
-	}**/
+	if(Attribute == GetMaxHealthAttribute()){
+		AdjustAttributeForMaxChange(Health, MaxHealth, NewValue, GetHealthAttribute());
+	}
 }
 
 void URushAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
-	return;
+	
 	UE_LOG(LogTemp, Warning, TEXT("Effect has happend"))
+	
 	Super::PostGameplayEffectExecute(Data);
 	const FGameplayEffectContextHandle Context = Data.EffectSpec.GetContext();
-	//UAbilitySystemComponent* Source = Context.GetOriginalInstigatorAbilitySystemComponent();
+	UAbilitySystemComponent* Source = Context.GetOriginalInstigatorAbilitySystemComponent();
 	const FGameplayTagContainer& SourceTags = *Data.EffectSpec.CapturedSourceTags.GetAggregatedTags();
 	
 	float DeltaValue {0.f};
@@ -41,12 +43,13 @@ void URushAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		DeltaValue = Data.EvaluatedData.Magnitude;
 	}
-	ABaseCharacter* TargetCharacter {nullptr};
+	ARushCharacter* TargetCharacter {nullptr};
 
 	if(Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
 	{
 		AActor* TargetActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
-		TargetCharacter = Cast<ABaseCharacter>(TargetActor);
+		TargetCharacter = Cast<ARushCharacter>(TargetActor);
+		
 	}
 
 	if(Data.EvaluatedData.Attribute == GetHealthAttribute())
@@ -54,7 +57,7 @@ void URushAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		SetHealth(FMath::Clamp(GetHealth(), 0.f, GetMaxHealth()));
 		if(TargetCharacter)
 		{
-			//TargetCharacter->HandleHealthChanged(DeltaValue, SourceTags);
+			TargetCharacter->HandleHealthChanged(DeltaValue, SourceTags);
 		}
 	}
 	
@@ -90,7 +93,6 @@ void URushAttributeSet::AdjustAttributeForMaxChange(const FGameplayAttributeData
                                                      const FGameplayAttributeData& MaxAttribute, float NewMaxValue,
                                                      const FGameplayAttribute& AffectedAttributeProperty) const
 {
-	return;
 	UAbilitySystemComponent* AbilityComp = GetOwningAbilitySystemComponent();
 	const float CurrentMaxValue = MaxAttribute.GetCurrentValue();
 	if(!FMath::IsNearlyEqual(CurrentMaxValue, NewMaxValue) && AbilityComp)
@@ -98,7 +100,6 @@ void URushAttributeSet::AdjustAttributeForMaxChange(const FGameplayAttributeData
 		const float CurrentValue = AffectedAttribute.GetCurrentValue();
 		const float NewDelta = (CurrentMaxValue > 0.f) ? (CurrentValue * NewMaxValue/ CurrentMaxValue)-CurrentValue : NewMaxValue;
 		AbilityComp-> ApplyModToAttributeUnsafe(AffectedAttributeProperty, EGameplayModOp::Additive, NewDelta);
-		
 	}
 	
 }

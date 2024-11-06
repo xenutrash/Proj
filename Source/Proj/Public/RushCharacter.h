@@ -27,7 +27,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable)
-	FActiveGameplayEffectHandle AddPassiveEffect(const TSubclassOf<UGameplayEffect>& Effect);
+	FActiveGameplayEffectHandle AddPassiveEffect(const TSubclassOf<class UGameplayEffect>& Effect);
 	
 	UFUNCTION(BlueprintCallable)
 	void AddActiveAbility(const TSubclassOf<URushGameplayAbility>& Ability);
@@ -72,7 +72,11 @@ protected:
 	void OnHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags);
 	
 	virtual void HandleHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags);
+	virtual void HandleDamage(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ARushCharacter* InstigatorCharacter, AActor* DamageCauser);
 	friend URushAttributeSet;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDamaged(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ARushCharacter* InstigatorCharacter, AActor* DamageCauser );
 	
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	void AddStartupGameplayAbilities();
@@ -83,11 +87,13 @@ protected:
 	TArray<TSubclassOf<URushGameplayAbility>> GameplayAbilities;
 	
 	
+
+	
 	
 	UPROPERTY()
 	uint8 bAbilitiesInitialized:1;
 
 
-	void SetBinds() const; 
+	void SetBinds(); 
 	
 };

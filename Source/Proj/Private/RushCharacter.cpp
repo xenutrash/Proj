@@ -12,6 +12,7 @@ ARushCharacter::ARushCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	bAbilitiesInitialized = false; 
 
 	AbilitySystemComponent = CreateDefaultSubobject<URushAbilitySystemComponent>(TEXT("Ability System"));
 	AbilitySystemComponent->SetIsReplicated(true);
@@ -63,9 +64,6 @@ void ARushCharacter::RemovePassiveAbility(const FActiveGameplayEffectHandle Effe
 	const bool F = AbilitySystemComponent->RemoveActiveGameplayEffect(EffectHandle, AmountToRemove);
 }
 
-
-
-
 FGameplayTagContainer ARushCharacter::GetPlayerTags()
 {
 	FGameplayTagContainer Container;
@@ -73,11 +71,26 @@ FGameplayTagContainer ARushCharacter::GetPlayerTags()
 	return Container;
 }
 
+void ARushCharacter::HandleHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags)
+{
+	if(bAbilitiesInitialized)
+	{
+		OnHealthChanged(DeltaValue, EventTags);
+	}
+	
+}
+
+void ARushCharacter::HandleDamage(float DamageAmount, const FHitResult& HitInfo,
+	const FGameplayTagContainer& DamageTags, ARushCharacter* InstigatorCharacter, AActor* DamageCauser)
+{
+	OnDamaged(DamageAmount, HitInfo, DamageTags, InstigatorCharacter, DamageCauser); 
+}
 
 
 void ARushCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
+	// server gas init
 	if(AbilitySystemComponent)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this,this);
@@ -96,7 +109,8 @@ void ARushCharacter::AddStartupGameplayAbilities()
 	check(AbilitySystemComponent);
 	if( GetLocalRole() == ROLE_Authority && !bAbilitiesInitialized)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("I have been called"))
+		// grants abilities on the server 
+		
 		for( const TSubclassOf<URushGameplayAbility>& Ability : GameplayAbilities )
 		{
 			AddActiveAbility(Ability);
@@ -119,17 +133,19 @@ UAbilitySystemComponent* ARushCharacter::GetAbilitySystemComponent() const
 
 
 
-void ARushCharacter::SetBinds() const
+void ARushCharacter::SetBinds() 
 {
 	if(AbilitySystemComponent && InputComponent)
 	{
 		const FGameplayAbilityInputBinds Binds(
 			"Confirm",
 			"Cancel",
-			"ERivetAbilityInputID",
+			"ERushAbilityInputID",
 			static_cast<int32>(ERushAbilityInputID::Confirm),
 			static_cast<int32>(ERushAbilityInputID::Cancel)
 			);
 		AbilitySystemComponent->BindAbilityActivationToInputComponent(InputComponent, Binds);
 	}
+
+	AddStartupGameplayAbilities();
 }
