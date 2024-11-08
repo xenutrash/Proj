@@ -17,7 +17,8 @@ enum class ERushAbilityInputID : uint8
 	SpecialAttack,
 	UltimateAttack,
 	BuffAbility,
-	BossAttack
+	BossAttack,
+	Dash
 };
 
 
