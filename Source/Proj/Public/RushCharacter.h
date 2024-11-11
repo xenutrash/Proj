@@ -79,9 +79,6 @@ protected:
 	void BossAttack();
 	void Taunt();
 	void Dash();
-	UPROPERTY(EditAnywhere)
-	UInputMappingContext* MappingContext;
-
 	
 	/***********
 		*Ability System Components 
