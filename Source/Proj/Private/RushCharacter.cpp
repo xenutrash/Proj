@@ -59,30 +59,37 @@ void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ARushCharacter::Move(const FInputActionValue& Value)
 {
+	UE_LOG(LogTemp, Display, TEXT("Move"));
 }
 
 void ARushCharacter::BasicAttack()
 {
+	UE_LOG(LogTemp, Display, TEXT("BasicAttack"));
 }
 
 void ARushCharacter::SpecialAttack()
 {
+	UE_LOG(LogTemp, Display, TEXT("SpecialAttack"));
 }
 
 void ARushCharacter::UltimateAttack()
 {
+	UE_LOG(LogTemp, Display, TEXT("UltimateAttack"));
 }
 
 void ARushCharacter::BossAttack()
 {
+	UE_LOG(LogTemp, Display, TEXT("BossAttack"));
 }
 
 void ARushCharacter::Taunt()
 {
+	UE_LOG(LogTemp, Display, TEXT("Taunt"));
 }
 
 void ARushCharacter::Dash()
 {
+	UE_LOG(LogTemp, Display, TEXT("Dash"));
 }
 
 

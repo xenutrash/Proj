@@ -72,7 +72,6 @@ protected:
 		*Actions
 	************/
 	
-	UInputMappingContext* MappingContext;
 	void Move(const FInputActionValue& Value);
 	void BasicAttack();
 	void SpecialAttack();
@@ -80,6 +79,8 @@ protected:
 	void BossAttack();
 	void Taunt();
 	void Dash();
+	UPROPERTY(EditAnywhere)
+	UInputMappingContext* MappingContext;
 
 	
 	/***********
