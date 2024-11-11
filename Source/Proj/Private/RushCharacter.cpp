@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Proj/ProjPlayerController.h"
+#include "InputActionValue.h"
 
 ARushCharacter::ARushCharacter()
 {
@@ -22,12 +23,14 @@ ARushCharacter::ARushCharacter()
 
 	Attributes = CreateDefaultSubobject<URushAttributeSet>(TEXT("Attributes"));
 
+	UE_LOG(LogTemp, Display, TEXT("Trying to Setup MappingContext"));
 	//Om det inte fungerar så är det fel här troligtvis
 	if(APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
 		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
-			Subsystem->AddMappingContext(MappingContext, 0);
+			Subsystem->AddMappingContext(MappingContext, 4);
+			UE_LOG(LogTemp, Display, TEXT("Setup MappingContext"));
 		}
 	}
 }
