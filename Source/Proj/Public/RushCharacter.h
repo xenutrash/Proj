@@ -16,11 +16,29 @@
 struct FActiveGameplayEffectHandle;
 class URushGameplayAbility;
 class URushAttributeSet;
-class URushAbilitySystemComponent; 
+class URushAbilitySystemComponent;
+class UInputAction;
+class UInputMappingContext;
+class UInputComponent;
+struct FInputActionValue;
 UCLASS()
 class PROJ_API ARushCharacter : public AProjCharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* MoveAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BasicAttackAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* SpecialAttackAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* UltimateAttackAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* BossAttackAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* DashAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* TauntAction;
 
 public:
 	ARushCharacter();
@@ -41,32 +59,43 @@ public:
 	
 protected:
 
-
-
 	/***********
 		*Overrides 
 	************/
+	
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 
+	/***********
+		*Actions
+	************/
 	
+	UInputMappingContext* MappingContext;
+	void Move(const FInputActionValue& Value);
+	void BasicAttack();
+	void SpecialAttack();
+	void UltimateAttack();
+	void BossAttack();
+	void Taunt();
+	void Dash();
 
-	/**********************
-		Ability System Components 
-		****************/
+	
+	/***********
+		*Ability System Components 
+	************/
+	
 	TObjectPtr<URushAbilitySystemComponent> AbilitySystemComponent;
 	TObjectPtr<URushAttributeSet> Attributes;
 
 	UFUNCTION(BlueprintCallable)
 	FGameplayTagContainer GetPlayerTags();
 
-
 	
-	/**********************
+	/***********
 	 Ability System stuff
-	 ****************/
+	 ***********/
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags);

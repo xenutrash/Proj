@@ -6,7 +6,9 @@
 #include "Core/Abilites/RushAttributeSet.h"
 #include "Proj/RushAbilitySystemComponent.h"
 #include "Proj/RushGameplayAbility.h"
-
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "Proj/ProjPlayerController.h"
 
 ARushCharacter::ARushCharacter()
 {
@@ -19,7 +21,17 @@ ARushCharacter::ARushCharacter()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	Attributes = CreateDefaultSubobject<URushAttributeSet>(TEXT("Attributes"));
+
+	//Om det inte fungerar så är det fel här troligtvis
+	if(APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	{
+		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(MappingContext, 0);
+		}
+	}
 }
+
 
 
 // Called to bind functionality to input
@@ -27,8 +39,51 @@ void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	SetBinds();
+	// Set up action bindings
+	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARushCharacter::Move);
+		EnhancedInputComponent->BindAction(BasicAttackAction, ETriggerEvent::Triggered, this, &ARushCharacter::BasicAttack);
+		EnhancedInputComponent->BindAction(SpecialAttackAction, ETriggerEvent::Triggered, this, &ARushCharacter::SpecialAttack);
+		EnhancedInputComponent->BindAction(UltimateAttackAction, ETriggerEvent::Triggered, this, &ARushCharacter::UltimateAttack);
+		EnhancedInputComponent->BindAction(BossAttackAction, ETriggerEvent::Triggered, this, &ARushCharacter::BossAttack);
+		EnhancedInputComponent->BindAction(TauntAction, ETriggerEvent::Triggered, this, &ARushCharacter::Taunt);
+		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &ARushCharacter::Dash);
+	}
+	else
+	{
+		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+	}
+	
 }
 
+void ARushCharacter::Move(const FInputActionValue& Value)
+{
+}
+
+void ARushCharacter::BasicAttack()
+{
+}
+
+void ARushCharacter::SpecialAttack()
+{
+}
+
+void ARushCharacter::UltimateAttack()
+{
+}
+
+void ARushCharacter::BossAttack()
+{
+}
+
+void ARushCharacter::Taunt()
+{
+}
+
+void ARushCharacter::Dash()
+{
+}
 
 
 FActiveGameplayEffectHandle ARushCharacter::AddPassiveEffect(const TSubclassOf<UGameplayEffect>& Effect)
@@ -77,7 +132,6 @@ void ARushCharacter::HandleHealthChanged(float DeltaValue, const FGameplayTagCon
 	{
 		OnHealthChanged(DeltaValue, EventTags);
 	}
-	
 }
 
 void ARushCharacter::HandleDamage(float DamageAmount, const FHitResult& HitInfo,
@@ -121,7 +175,6 @@ void ARushCharacter::AddStartupGameplayAbilities()
 			AddPassiveEffect(Effect);
 		}
 		bAbilitiesInitialized = true;
-	
 	}
 }
 
