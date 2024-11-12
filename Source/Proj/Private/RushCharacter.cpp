@@ -52,6 +52,20 @@ void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void ARushCharacter::Move(const FInputActionValue& Value)
 {
 	UE_LOG(LogTemp, Display, TEXT("Move"));
+	
+	// input is a Vector2D
+	FVector2D MovementVector = Value.Get<FVector2D>();
+
+	if (Controller != nullptr)
+	{
+		const FRotator Rotation = GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		// add movement 
+		AddMovementInput(ForwardDirection, MovementVector.Y);
+		AddMovementInput(RightDirection, MovementVector.X);
+	}	
 }
 
 void ARushCharacter::BasicAttack()
