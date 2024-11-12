@@ -79,7 +79,19 @@ protected:
 	void BossAttack();
 	void Taunt();
 	void Dash();
-	
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDash();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBasicAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpecialAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUltimateAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBossAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTaunt();
 	/***********
 		*Ability System Components 
 	************/

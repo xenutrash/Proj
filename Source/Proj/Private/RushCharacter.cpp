@@ -46,7 +46,6 @@ void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
-	
 }
 
 void ARushCharacter::Move(const FInputActionValue& Value)
@@ -71,31 +70,37 @@ void ARushCharacter::Move(const FInputActionValue& Value)
 void ARushCharacter::BasicAttack()
 {
 	UE_LOG(LogTemp, Display, TEXT("BasicAttack"));
+	OnBasicAttack();
 }
 
 void ARushCharacter::SpecialAttack()
 {
 	UE_LOG(LogTemp, Display, TEXT("SpecialAttack"));
+	OnSpecialAttack();
 }
 
 void ARushCharacter::UltimateAttack()
 {
 	UE_LOG(LogTemp, Display, TEXT("UltimateAttack"));
+	OnUltimateAttack();
 }
 
 void ARushCharacter::BossAttack()
 {
 	UE_LOG(LogTemp, Display, TEXT("BossAttack"));
+	OnBossAttack();
 }
 
 void ARushCharacter::Taunt()
 {
 	UE_LOG(LogTemp, Display, TEXT("Taunt"));
+	OnTaunt();
 }
 
 void ARushCharacter::Dash()
 {
 	UE_LOG(LogTemp, Display, TEXT("Dash"));
+	OnDash();
 }
 
 
