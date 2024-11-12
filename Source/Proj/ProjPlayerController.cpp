@@ -18,8 +18,10 @@ AProjPlayerController::AProjPlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
-	CachedDestination = FVector::ZeroVector;
-	FollowTime = 0.f;
+
+	// We could use later? 
+	//CachedDestination = FVector::ZeroVector;
+	//FollowTime = 0.f;
 }
 
 void AProjPlayerController::BeginPlay()
@@ -42,17 +44,14 @@ void AProjPlayerController::SetupInputComponent()
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-		// Setup mouse input events
-		EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Started, this, &AProjPlayerController::OnInputStarted);
-		EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Triggered, this, &AProjPlayerController::OnSetDestinationTriggered);
-		EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Completed, this, &AProjPlayerController::OnSetDestinationReleased);
-		EnhancedInputComponent->BindAction(SetDestinationClickAction, ETriggerEvent::Canceled, this, &AProjPlayerController::OnSetDestinationReleased);
 
-		// Setup touch input events
-		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Started, this, &AProjPlayerController::OnInputStarted);
-		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Triggered, this, &AProjPlayerController::OnTouchTriggered);
-		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Completed, this, &AProjPlayerController::OnTouchReleased);
-		EnhancedInputComponent->BindAction(SetDestinationTouchAction, ETriggerEvent::Canceled, this, &AProjPlayerController::OnTouchReleased);
+
+		// Setup Keyboard input events
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProjPlayerController::Move);
+
+		// Mouse click input
+		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AProjPlayerController::RotateCharacterTowardsClick);
+
 	}
 	else
 	{
@@ -60,66 +59,60 @@ void AProjPlayerController::SetupInputComponent()
 	}
 }
 
-void AProjPlayerController::OnInputStarted()
+
+
+// WASD movement
+void AProjPlayerController::Move(const FInputActionValue& Value)
 {
-	StopMovement();
+	APawn* ControlledPawn = GetPawn(); // Get the controlled pawn
+	if (ControlledPawn != nullptr)
+	{
+		// input is a Vector2D
+		FVector2D MovementVector = Value.Get<FVector2D>();
+		
+		// find out which way is forward
+		const FRotator Rotation = ControlledPawn->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+    
+		// get right vector 
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		// add movement 
+		ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
+		ControlledPawn->AddMovementInput(RightDirection, MovementVector.X);
+	}
+	
 }
 
-// Triggered every frame when the input is held down
-void AProjPlayerController::OnSetDestinationTriggered()
+void AProjPlayerController::RotateCharacterTowardsClick()
 {
-	// We flag that the input is being pressed
-	FollowTime += GetWorld()->GetDeltaSeconds();
-	
-	// We look for the location in the world where the player has pressed the input
-	FHitResult Hit;
-	bool bHitSuccessful = false;
-	if (bIsTouch)
-	{
-		bHitSuccessful = GetHitResultUnderFinger(ETouchIndex::Touch1, ECollisionChannel::ECC_Visibility, true, Hit);
-	}
-	else
-	{
-		bHitSuccessful = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
-	}
-
-	// If we hit a surface, cache the location
-	if (bHitSuccessful)
-	{
-		CachedDestination = Hit.Location;
-	}
-	
-	// Move towards mouse pointer or touch
 	APawn* ControlledPawn = GetPawn();
 	if (ControlledPawn != nullptr)
 	{
-		FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
-		ControlledPawn->AddMovementInput(WorldDirection, 1.0, false);
+		FHitResult Hit;
+		bool bHitSuccessful = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
+
+		if (bHitSuccessful)
+		{
+			FVector TargetLocation = Hit.Location;
+			FVector PawnLocation = ControlledPawn->GetActorLocation();
+
+			// Calculate the direction vector from the pawn to the target location
+			FVector Direction = (TargetLocation - PawnLocation).GetSafeNormal2D();
+
+			// Convert the direction to a rotation
+			FRotator NewRotation = Direction.Rotation();
+
+			// Apply the rotation to the character (only Yaw)
+			ControlledPawn->SetActorRotation(FRotator(0, NewRotation.Yaw, 0));
+		}
 	}
 }
 
-void AProjPlayerController::OnSetDestinationReleased()
-{
-	// If it was a short press
-	if (FollowTime <= ShortPressThreshold)
-	{
-		// We move there and spawn some particles
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, CachedDestination);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, CachedDestination, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
-	}
 
-	FollowTime = 0.f;
-}
 
-// Triggered every frame when the input is held down
-void AProjPlayerController::OnTouchTriggered()
-{
-	bIsTouch = true;
-	OnSetDestinationTriggered();
-}
 
-void AProjPlayerController::OnTouchReleased()
-{
-	bIsTouch = false;
-	OnSetDestinationReleased();
-}
+
