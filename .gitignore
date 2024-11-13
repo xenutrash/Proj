@@ -74,4 +74,5 @@ Plugins/*/Intermediate/*
 DerivedDataCache/*
 .vsconfig
 /.idea
-/Plugins
+/Plugins/FMODStudioNiagara
+/Plugins/FMODStudio
