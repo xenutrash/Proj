@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Proj/ProjPlayerController.h"
 #include "InputActionValue.h"
+#include "PlayerGameplayAbilitiesDataAsset.h"
 
 ARushCharacter::ARushCharacter()
 {
@@ -30,10 +31,15 @@ ARushCharacter::ARushCharacter()
 void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	UE_LOG(LogTemp, Display, TEXT("Set Binds"));
 	SetBinds();
+	UE_LOG(LogTemp, Display, TEXT("Finished Setting Binds"));
 	// Set up action bindings
+	
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
+		UE_LOG(LogTemp, Display, TEXT("Successful setting up action bindings"));
+	// Set up action bindings
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ARushCharacter::Move);
 		EnhancedInputComponent->BindAction(BasicAttackAction, ETriggerEvent::Triggered, this, &ARushCharacter::BasicAttack);
 		EnhancedInputComponent->BindAction(SpecialAttackAction, ETriggerEvent::Triggered, this, &ARushCharacter::SpecialAttack);
@@ -46,6 +52,21 @@ void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	{
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
 	}
+}
+
+void ARushCharacter::BeginPlay()
+{
+	InitAbilitySystem();
+ 
+ 	if (const APlayerController* PlayerController = Cast<APlayerController>(Controller))
+ 	{
+ 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+ 		{
+ 			constexpr int32 Priority = 0;
+ 			Subsystem->AddMappingContext(DefaultMappingContext, Priority);
+ 		}
+ 	}
+	Super::BeginPlay();
 }
 
 void ARushCharacter::Move(const FInputActionValue& Value)
@@ -219,4 +240,39 @@ void ARushCharacter::SetBinds()
 	}
 
 	AddStartupGameplayAbilities();
+}
+
+void ARushCharacter::InitAbilitySystem()
+{
+	if (PlayerGameplayAbilitiesDataAsset)
+	{
+		//Does not compile
+		const TSet<FGameplayInputAbilityInfo>& InputAbilities = PlayerGameplayAbilitiesDataAsset->GetInputAbilities();
+		constexpr int32 AbilityLevel = 1;
+  
+		for (const auto& It : InputAbilities)
+		{
+			if (It.IsValid())
+			{
+				const FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(It.GameplayAbilityClass, AbilityLevel, It.InputID);
+				AbilitySystemComponent->GiveAbility(AbilitySpec);
+			}
+		}
+	}	
+}
+
+void ARushCharacter::OnAbilityInputPressed(int32 InputID)
+{
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AbilityLocalInputPressed(InputID);
+	}	
+}
+
+void ARushCharacter::OnAbilityInputReleased(int32 InputID)
+{
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->AbilityLocalInputReleased(InputID);
+	}	
 }

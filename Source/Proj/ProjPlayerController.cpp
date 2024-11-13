@@ -39,7 +39,9 @@ void AProjPlayerController::SetupInputComponent()
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		UE_LOG(LogTemp, Display, TEXT("Added mapping context"));
 	}
+	UE_LOG(LogTemp, Display, TEXT("Changed Mapping Context"));
 
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
