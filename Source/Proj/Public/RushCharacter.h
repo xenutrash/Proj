@@ -6,7 +6,6 @@
 #include "Proj/ProjCharacter.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayTagContainer.h"
-#include "AttributeSet.h"
 #include "RushCharacter.generated.h"
 
 
@@ -67,7 +66,7 @@ protected:
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	virtual void BeginPlay() override;
+
 
 	/***********
 		*Actions
@@ -87,10 +86,10 @@ protected:
 		*Ability System Components 
 	************/
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	TObjectPtr<URushAbilitySystemComponent> AbilitySystemComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Input, meta = (AllowPrivateAccess = "true"))
+	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	TObjectPtr<URushAttributeSet> Attributes;
 
 	UFUNCTION(BlueprintCallable)
@@ -120,8 +119,7 @@ protected:
 	TArray<TSubclassOf<URushGameplayAbility>> GameplayAbilities;
 	
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gas", meta  = (AllowPrivateAccess = "true"))
-	const class URushAttributeSet* RushAttributeSet;
+
 	
 	
 	UPROPERTY()
