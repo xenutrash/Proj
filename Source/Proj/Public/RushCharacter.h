@@ -85,8 +85,11 @@ protected:
 	/***********
 		*Ability System Components 
 	************/
-	
+
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	TObjectPtr<URushAbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	TObjectPtr<URushAttributeSet> Attributes;
 
 	UFUNCTION(BlueprintCallable)
