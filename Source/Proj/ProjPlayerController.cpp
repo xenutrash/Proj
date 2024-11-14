@@ -39,9 +39,7 @@ void AProjPlayerController::SetupInputComponent()
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		UE_LOG(LogTemp, Display, TEXT("Added mapping context"));
 	}
-	UE_LOG(LogTemp, Display, TEXT("Changed Mapping Context"));
 
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
@@ -49,7 +47,7 @@ void AProjPlayerController::SetupInputComponent()
 
 
 		// Setup Keyboard input events
-		// EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProjPlayerController::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProjPlayerController::Move);
 
 		// Mouse click input
 		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AProjPlayerController::RotateCharacterTowardsClick);
@@ -64,30 +62,30 @@ void AProjPlayerController::SetupInputComponent()
 
 
 // WASD movement
-// void AProjPlayerController::Move(const FInputActionValue& Value)
-// {
-// 	APawn* ControlledPawn = GetPawn(); // Get the controlled pawn
-// 	if (ControlledPawn != nullptr)
-// 	{
-// 		// input is a Vector2D
-// 		FVector2D MovementVector = Value.Get<FVector2D>();
-// 		
-// 		// find out which way is forward
-// 		const FRotator Rotation = ControlledPawn->GetControlRotation();
-// 		const FRotator YawRotation(0, Rotation.Yaw, 0);
-//
-// 		// get forward vector
-// 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-//     
-// 		// get right vector 
-// 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-//
-// 		// add movement 
-// 		ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
-// 		ControlledPawn->AddMovementInput(RightDirection, MovementVector.X);
-// 	}
-// 	
-// }
+void AProjPlayerController::Move(const FInputActionValue& Value)
+{
+	APawn* ControlledPawn = GetPawn(); // Get the controlled pawn
+	if (ControlledPawn != nullptr)
+	{
+		// input is a Vector2D
+		FVector2D MovementVector = Value.Get<FVector2D>();
+		
+		// find out which way is forward
+		const FRotator Rotation = ControlledPawn->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+    
+		// get right vector 
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		// add movement 
+		ControlledPawn->AddMovementInput(ForwardDirection, MovementVector.Y);
+		ControlledPawn->AddMovementInput(RightDirection, MovementVector.X);
+	}
+	
+}
 
 void AProjPlayerController::RotateCharacterTowardsClick()
 {
