@@ -13,6 +13,7 @@
  * 
  */
 
+class UPlayerGameplayAbilitiesDataAsset;
 struct FActiveGameplayEffectHandle;
 class URushGameplayAbility;
 class URushAttributeSet;
@@ -56,6 +57,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RemovePassiveAbility(const FActiveGameplayEffectHandle EffectHandle, const int AmountToRemove = 1) const;
 
+	FORCEINLINE UPlayerGameplayAbilitiesDataAsset* GetPlayerGameplayAbilitiesDataAsset() const { return PlayerGameplayAbilitiesDataAsset; }
 	
 protected:
 
@@ -67,12 +69,12 @@ protected:
 	virtual void OnRep_PlayerState() override;
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+	virtual void BeginPlay() override;
 
 	/***********
 		*Actions
 	************/
 	
-	UInputMappingContext* MappingContext;
 	void Move(const FInputActionValue& Value);
 	void BasicAttack();
 	void SpecialAttack();
@@ -80,6 +82,19 @@ protected:
 	void BossAttack();
 	void Taunt();
 	void Dash();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDash();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBasicAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpecialAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUltimateAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBossAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTaunt();
 
 	
 	/***********
@@ -125,4 +140,14 @@ protected:
 
 	void SetBinds(); 
 	
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputMappingContext> DefaultMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AbilitySystem", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UPlayerGameplayAbilitiesDataAsset> PlayerGameplayAbilitiesDataAsset;
+
+	void InitAbilitySystem();
+	void OnAbilityInputPressed(int32 InputID);
+	void OnAbilityInputReleased(int32 InputID);
 };
