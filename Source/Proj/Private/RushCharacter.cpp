@@ -10,6 +10,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Proj/ProjPlayerController.h"
 
+
 ARushCharacter::ARushCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -201,4 +202,13 @@ void ARushCharacter::SetBinds()
 	}
 
 	AddStartupGameplayAbilities();
+}
+
+void ARushCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	if(IsValid(AbilitySystemComponent))
+	{
+		RushAttributeSet = AbilitySystemComponent->GetSet<URushAttributeSet>();
+	}
 }
