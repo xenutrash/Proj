@@ -22,5 +22,6 @@ AProjGameMode::AProjGameMode()
 	if(PlayerControllerBPClass.Class != NULL)
 	{
 		PlayerControllerClass = PlayerControllerBPClass.Class;
+		UE_LOG(LogTemp, Display, TEXT("Changed Controller"));
 	}
 }

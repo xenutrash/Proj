@@ -30,6 +30,10 @@ ARushCharacter::ARushCharacter()
 			Subsystem->AddMappingContext(MappingContext, 0);
 		}
 	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("Failed to find controller"));
+	}
 }
 
 
@@ -59,30 +63,53 @@ void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void ARushCharacter::Move(const FInputActionValue& Value)
 {
+	// input is a Vector2D
+	FVector2D MovementVector = Value.Get<FVector2D>();
+	
+	// find out which way is forward
+	const FRotator Rotation = GetControlRotation();
+	const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+	// get forward vector
+	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+	// get right vector 
+	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+	// add movement 
+	AddMovementInput(ForwardDirection, MovementVector.Y);
+	AddMovementInput(RightDirection, MovementVector.X);
+	OnMove();
 }
 
 void ARushCharacter::BasicAttack()
 {
+	OnBasicAttack();
 }
 
 void ARushCharacter::SpecialAttack()
 {
+	OnSpecialAttack();
 }
 
 void ARushCharacter::UltimateAttack()
 {
+	OnUltimateAttack();
 }
 
 void ARushCharacter::BossAttack()
 {
+	OnBossAttack();
 }
 
 void ARushCharacter::Taunt()
 {
+	OnTaunt();
 }
 
 void ARushCharacter::Dash()
 {
+	OnDash();
 }
 
 

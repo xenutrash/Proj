@@ -81,6 +81,20 @@ protected:
 	void Taunt();
 	void Dash();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnMove();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBasicAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpecialAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUltimateAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBossAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTaunt();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDash();
 	
 	/***********
 		*Ability System Components 

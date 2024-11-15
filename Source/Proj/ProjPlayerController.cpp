@@ -36,27 +36,27 @@ void AProjPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	// Add Input Mapping Context
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-	{
-		Subsystem->AddMappingContext(DefaultMappingContext, 0);
-	}
+	// if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	// {
+	// 	Subsystem->AddMappingContext(DefaultMappingContext, 0);
+	// }
 
 	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
-	{
-
-
-		// Setup Keyboard input events
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProjPlayerController::Move);
-
-		// Mouse click input
-		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AProjPlayerController::RotateCharacterTowardsClick);
-
-	}
-	else
-	{
-		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
-	}
+	// if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
+	// {
+	//
+	//
+	// 	// Setup Keyboard input events
+	// 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProjPlayerController::Move);
+	//
+	// 	// Mouse click input
+	// 	EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AProjPlayerController::RotateCharacterTowardsClick);
+	//
+	// }
+	// else
+	// {
+	// 	UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+	// }
 }
 
 
