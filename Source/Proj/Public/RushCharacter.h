@@ -109,8 +109,12 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDamaged(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ARushCharacter* InstigatorCharacter, AActor* DamageCauser );
-	
+public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	URushAttributeSet* GetAttributeSet() const { return Attributes; }
+protected:
 	void AddStartupGameplayAbilities();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilites")
 	TArray<TSubclassOf<class UGameplayEffect>> PassiveGameplayEffects;
@@ -127,5 +131,7 @@ protected:
 
 
 	void SetBinds(); 
-	
+
+private:
+	void InitHud() const;
 };

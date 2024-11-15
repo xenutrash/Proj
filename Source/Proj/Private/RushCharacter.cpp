@@ -9,6 +9,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Proj/ProjPlayerController.h"
+#include "Proj/UI/RushHud.h"
 
 
 ARushCharacter::ARushCharacter()
@@ -150,6 +151,7 @@ void ARushCharacter::PossessedBy(AController* NewController)
 	{
 		AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	}
+	InitHud();
 }
 
 void ARushCharacter::OnRep_PlayerState()
@@ -157,6 +159,7 @@ void ARushCharacter::OnRep_PlayerState()
 	Super::OnRep_PlayerState();
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	SetBinds();
+	//InitHud(); Kanske ifall multiplayer senare?
 }
 
 void ARushCharacter::AddStartupGameplayAbilities()
@@ -204,11 +207,14 @@ void ARushCharacter::SetBinds()
 	AddStartupGameplayAbilities();
 }
 
-void ARushCharacter::BeginPlay()
+void ARushCharacter::InitHud() const
 {
-	Super::BeginPlay();
-	if(IsValid(AbilitySystemComponent))
+	if(const APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
-		RushAttributeSet = AbilitySystemComponent->GetSet<URushAttributeSet>();
+		if(ARushHud* RushHud = Cast<ARushHud>(PlayerController->GetHUD()))
+		{
+			RushHud->Init();
+		}
 	}
 }
+
