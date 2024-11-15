@@ -33,7 +33,7 @@ public:
 	virtual void OnRep_Health(const FGameplayAttributeData& OldValue);
 
 	UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_MaxHealth, Category= "Attributes")
-	FGameplayAttributeData MaxHealth = 150;
+	FGameplayAttributeData MaxHealth = 100;
 	ATTRIBUTE_ACCESSORS(URushAttributeSet, MaxHealth)
 	UFUNCTION()
 	virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
