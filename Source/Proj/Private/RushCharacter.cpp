@@ -23,17 +23,17 @@ ARushCharacter::ARushCharacter()
 	Attributes = CreateDefaultSubobject<URushAttributeSet>(TEXT("Attributes"));
 
 	//Om det inte fungerar så är det fel här troligtvis
-	if(APlayerController* PlayerController = Cast<APlayerController>(Controller))
-	{
-		if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
-		{
-			Subsystem->AddMappingContext(MappingContext, 0);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Display, TEXT("Failed to find controller"));
-	}
+	// if(APlayerController* PlayerController = Cast<APlayerController>(Controller))
+	// {
+	// 	if(UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+	// 	{
+	// 		Subsystem->AddMappingContext(MappingContext, 0);
+	// 	}
+	// }
+	// else
+	// {
+	// 	UE_LOG(LogTemp, Display, TEXT("Failed to find controller"));
+	// }
 }
 
 
