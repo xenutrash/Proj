@@ -27,13 +27,13 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category= "Attributes")
-	FGameplayAttributeData Health = 0;
+	FGameplayAttributeData Health = 100;
 	ATTRIBUTE_ACCESSORS(URushAttributeSet, Health)
-	UFUNCTION()
+	UFUNCTION() 
 	virtual void OnRep_Health(const FGameplayAttributeData& OldValue);
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category= "Attributes")
-	FGameplayAttributeData MaxHealth = 0;
+	UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_MaxHealth, Category= "Attributes")
+	FGameplayAttributeData MaxHealth = 100;
 	ATTRIBUTE_ACCESSORS(URushAttributeSet, MaxHealth)
 	UFUNCTION()
 	virtual void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);

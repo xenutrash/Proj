@@ -40,18 +40,18 @@ void AProjPlayerController::SetupInputComponent()
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
-
+	
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
 	{
-
-
+	
+	
 		// Setup Keyboard input events
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProjPlayerController::Move);
-
+	
 		// Mouse click input
 		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &AProjPlayerController::RotateCharacterTowardsClick);
-
+	
 	}
 	else
 	{
