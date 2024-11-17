@@ -81,12 +81,29 @@ protected:
 	void Taunt();
 	void Dash();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnMove();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBasicAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpecialAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnUltimateAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnBossAttack();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnTaunt();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDash();
 	
 	/***********
 		*Ability System Components 
 	************/
-	
+
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	TObjectPtr<URushAbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	TObjectPtr<URushAttributeSet> Attributes;
 
 	UFUNCTION(BlueprintCallable)
@@ -106,8 +123,12 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDamaged(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ARushCharacter* InstigatorCharacter, AActor* DamageCauser );
-	
+public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	URushAttributeSet* GetAttributeSet() const { return Attributes; }
+protected:
 	void AddStartupGameplayAbilities();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilites")
 	TArray<TSubclassOf<class UGameplayEffect>> PassiveGameplayEffects;
@@ -124,5 +145,7 @@ protected:
 
 
 	void SetBinds(); 
-	
+
+private:
+	void InitHud() const;
 };
