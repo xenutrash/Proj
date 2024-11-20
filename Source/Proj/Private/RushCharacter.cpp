@@ -20,7 +20,7 @@ ARushCharacter::ARushCharacter()
 
 	AbilitySystemComponent = CreateDefaultSubobject<URushAbilitySystemComponent>(TEXT("Ability System"));
 	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Full);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	Attributes = CreateDefaultSubobject<URushAttributeSet>(TEXT("Attributes"));
 
@@ -161,10 +161,9 @@ void ARushCharacter::OnHealthChanged_Implementation(float DeltaValue, const FGam
 
 
 void ARushCharacter::HandleHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags)
-{UE_LOG(LogTemp, Warning, TEXT("The value of bIsTrue is: %s"), bAbilitiesInitialized ? TEXT("true") : TEXT("false"));
+{
 	if(bAbilitiesInitialized)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("INITIAZLIED"));
 		OnHealthChanged(DeltaValue, EventTags);
 	}
 }
@@ -201,7 +200,6 @@ void ARushCharacter::OnRep_PlayerState()
 
 void ARushCharacter::AddStartupGameplayAbilities()
 {
-	UE_LOG(LogTemp, Error, TEXT("DEN KOMMER IN I STARTUPGAMEPLAYABILITIES"));
 	check(AbilitySystemComponent);
 	if( GetLocalRole() == ROLE_Authority && !bAbilitiesInitialized)
 	{
@@ -209,7 +207,6 @@ void ARushCharacter::AddStartupGameplayAbilities()
 		
 		for( const TSubclassOf<URushGameplayAbility>& Ability : GameplayAbilities )
 		{
-			UE_LOG(LogTemp, Warning, TEXT("GER ABILITY GEEEEEEER"));
 			AddActiveAbility(Ability);
 			AbilitySystemComponent->InitAbilityActorInfo(this,this);
 		}
