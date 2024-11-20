@@ -43,9 +43,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* RotateAction;
 	void RotateCharacterTowardsClick();
+
+	
 	
 protected:
-	
+
+	/***********
+		*Overrides 
+	************/
+
+	virtual void AcknowledgePossession(APawn* P) override;
 	virtual void SetupInputComponent() override;
 	
 	

@@ -155,6 +155,11 @@ FGameplayTagContainer ARushCharacter::GetPlayerTags()
 	return Container;
 }
 
+void ARushCharacter::OnHealthChanged_Implementation(float DeltaValue, const FGameplayTagContainer& EventTags)
+{
+}
+
+
 void ARushCharacter::HandleHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags)
 {
 	if(bAbilitiesInitialized)
@@ -176,8 +181,11 @@ void ARushCharacter::PossessedBy(AController* NewController)
 	// server gas init
 	if(AbilitySystemComponent)
 	{
+		AddStartupGameplayAbilities();
 		AbilitySystemComponent->InitAbilityActorInfo(this,this);
+		AbilitySystemComponent->RefreshAbilityActorInfo();
 	}
+	SetOwner(NewController);
 	InitHud();
 }
 
@@ -189,6 +197,7 @@ void ARushCharacter::OnRep_PlayerState()
 	//InitHud(); Kanske ifall multiplayer senare?
 }
 
+
 void ARushCharacter::AddStartupGameplayAbilities()
 {
 	check(AbilitySystemComponent);
@@ -199,16 +208,26 @@ void ARushCharacter::AddStartupGameplayAbilities()
 		for( const TSubclassOf<URushGameplayAbility>& Ability : GameplayAbilities )
 		{
 			AddActiveAbility(Ability);
+			AbilitySystemComponent->InitAbilityActorInfo(this,this);
 		}
 		
 		for( const TSubclassOf<UGameplayEffect>& Effect : PassiveGameplayEffects )
 		{
 			AddPassiveEffect(Effect);
+			AbilitySystemComponent->InitAbilityActorInfo(this,this);
 		}
 		bAbilitiesInitialized = true;
 	}
 }
 
+
+void ARushCharacter::RefreshActor()
+{
+	if(AbilitySystemComponent)
+	{
+		AbilitySystemComponent->RefreshAbilityActorInfo();
+	}
+}
 
 UAbilitySystemComponent* ARushCharacter::GetAbilitySystemComponent() const
 {
