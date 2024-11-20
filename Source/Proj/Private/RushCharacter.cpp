@@ -20,7 +20,7 @@ ARushCharacter::ARushCharacter()
 
 	AbilitySystemComponent = CreateDefaultSubobject<URushAbilitySystemComponent>(TEXT("Ability System"));
 	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Full);
 
 	Attributes = CreateDefaultSubobject<URushAttributeSet>(TEXT("Attributes"));
 
@@ -155,10 +155,16 @@ FGameplayTagContainer ARushCharacter::GetPlayerTags()
 	return Container;
 }
 
-void ARushCharacter::HandleHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags)
+void ARushCharacter::OnHealthChanged_Implementation(float DeltaValue, const FGameplayTagContainer& EventTags)
 {
+}
+
+
+void ARushCharacter::HandleHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags)
+{UE_LOG(LogTemp, Warning, TEXT("The value of bIsTrue is: %s"), bAbilitiesInitialized ? TEXT("true") : TEXT("false"));
 	if(bAbilitiesInitialized)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("INITIAZLIED"));
 		OnHealthChanged(DeltaValue, EventTags);
 	}
 }
@@ -176,8 +182,11 @@ void ARushCharacter::PossessedBy(AController* NewController)
 	// server gas init
 	if(AbilitySystemComponent)
 	{
+		AddStartupGameplayAbilities();
 		AbilitySystemComponent->InitAbilityActorInfo(this,this);
+		AbilitySystemComponent->RefreshAbilityActorInfo();
 	}
+	SetOwner(NewController);
 	InitHud();
 }
 
@@ -189,8 +198,10 @@ void ARushCharacter::OnRep_PlayerState()
 	//InitHud(); Kanske ifall multiplayer senare?
 }
 
+
 void ARushCharacter::AddStartupGameplayAbilities()
 {
+	UE_LOG(LogTemp, Error, TEXT("DEN KOMMER IN I STARTUPGAMEPLAYABILITIES"));
 	check(AbilitySystemComponent);
 	if( GetLocalRole() == ROLE_Authority && !bAbilitiesInitialized)
 	{
@@ -198,17 +209,28 @@ void ARushCharacter::AddStartupGameplayAbilities()
 		
 		for( const TSubclassOf<URushGameplayAbility>& Ability : GameplayAbilities )
 		{
+			UE_LOG(LogTemp, Warning, TEXT("GER ABILITY GEEEEEEER"));
 			AddActiveAbility(Ability);
+			AbilitySystemComponent->InitAbilityActorInfo(this,this);
 		}
 		
 		for( const TSubclassOf<UGameplayEffect>& Effect : PassiveGameplayEffects )
 		{
 			AddPassiveEffect(Effect);
+			AbilitySystemComponent->InitAbilityActorInfo(this,this);
 		}
 		bAbilitiesInitialized = true;
 	}
 }
 
+
+void ARushCharacter::RefreshActor()
+{
+	if(AbilitySystemComponent)
+	{
+		AbilitySystemComponent->RefreshAbilityActorInfo();
+	}
+}
 
 UAbilitySystemComponent* ARushCharacter::GetAbilitySystemComponent() const
 {

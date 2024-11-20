@@ -55,6 +55,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void RemovePassiveAbility(const FActiveGameplayEffectHandle EffectHandle, const int AmountToRemove = 1) const;
+	
+	virtual void OnRep_PlayerState() override;
+
+	
 
 	
 protected:
@@ -64,7 +68,7 @@ protected:
 	************/
 	
 	virtual void PossessedBy(AController* NewController) override;
-	virtual void OnRep_PlayerState() override;
+	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 
@@ -114,7 +118,7 @@ protected:
 	 Ability System stuff
 	 ***********/
 	
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintNativeEvent)
 	void OnHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags);
 	
 	virtual void HandleHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags);
@@ -123,6 +127,10 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDamaged(float DamageAmount, const FHitResult& HitInfo, const struct FGameplayTagContainer& DamageTags, ARushCharacter* InstigatorCharacter, AActor* DamageCauser );
+
+	UFUNCTION(BlueprintCallable)
+	void RefreshActor();
+	
 public:
 	virtual class UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
