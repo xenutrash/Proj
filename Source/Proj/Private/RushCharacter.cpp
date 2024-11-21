@@ -92,7 +92,10 @@ void ARushCharacter::BasicAttack()
 
 void ARushCharacter::SpecialAttack()
 {
-	OnSpecialAttack();
+	
+	
+		OnSpecialAttack();	
+	
 }
 
 void ARushCharacter::UltimateAttack()
