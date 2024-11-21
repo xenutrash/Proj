@@ -3,6 +3,7 @@
 
 #include "RushCharacter.h"
 
+#include "AssetTypeCategories.h"
 #include "Core/Abilites/RushAttributeSet.h"
 #include "Proj/RushAbilitySystemComponent.h"
 #include "Proj/RushGameplayAbility.h"
@@ -11,6 +12,7 @@
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerState.h"
 #include "GenericPlatform/GenericPlatformCrashContext.h"
+#include "Kismet/GameplayStatics.h"
 #include "Proj/ProjPlayerController.h"
 #include "Proj/UI/RushHud.h"
 
@@ -210,8 +212,7 @@ void ARushCharacter::DisplayGameOverWidget_Implementation()
 	if(GameOverMenu == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No gameover widget added to player"));
-		
-		return;
+		return; 
 	}
 
 	GameOverMenu->AddToViewport();
@@ -273,13 +274,10 @@ void ARushCharacter::CreateGameOverMenu()
 		UE_LOG(LogTemp, Warning, TEXT("A game over widget has already been created"));
 		return; 
 	}
-
-
-
-
+	
 	APlayerController* controllerCasted = Cast<APlayerController>(GetController());
 	
-	GameOverMenu = CreateWidget<UUserWidget>(controllerCasted , GameOverMenuWidget);
+	GameOverMenu = CreateWidget<UUserWidget>( controllerCasted, GameOverMenuWidget);
 	
 	if(GameOverMenu == nullptr)
 	{
