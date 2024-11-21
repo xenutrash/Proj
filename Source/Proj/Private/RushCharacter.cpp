@@ -20,10 +20,11 @@ ARushCharacter::ARushCharacter()
 
 	AbilitySystemComponent = CreateDefaultSubobject<URushAbilitySystemComponent>(TEXT("Ability System"));
 	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	Attributes = CreateDefaultSubobject<URushAttributeSet>(TEXT("Attributes"));
 
+	NetUpdateFrequency = 30.0f; 
 	//Om det inte fungerar så är det fel här troligtvis
 	// if(APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	// {
