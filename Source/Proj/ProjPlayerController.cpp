@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ProjPlayerController.h"
+
+#include "AbilitySystemComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraSystem.h"
@@ -10,6 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
+#include "RushCharacter.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -109,6 +112,17 @@ void AProjPlayerController::RotateCharacterTowardsClick()
 			// Apply the rotation to the character (only Yaw)
 			ControlledPawn->SetActorRotation(FRotator(0, NewRotation.Yaw, 0));
 		}
+	}
+}
+
+void AProjPlayerController::AcknowledgePossession(APawn* P)
+{
+	Super::AcknowledgePossession(P);
+	UE_LOG(LogTemp, Warning, TEXT("Acknowledged"));
+	ARushCharacter* CharacterBase = Cast<ARushCharacter>(P);
+	if(CharacterBase)
+	{
+		CharacterBase->GetAbilitySystemComponent()->InitAbilityActorInfo(CharacterBase,CharacterBase);
 	}
 }
 
