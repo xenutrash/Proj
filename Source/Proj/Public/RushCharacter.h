@@ -136,6 +136,25 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	URushAttributeSet* GetAttributeSet() const { return Attributes; }
+
+	UFUNCTION(BlueprintCallable, Category = "Attributes")
+	void CreateGameOverMenu();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Widgets")
+	TSubclassOf<UUserWidget> GameOverMenuWidget;
+	
+	UPROPERTY(BlueprintReadOnly)
+	UUserWidget* GameOverMenu;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void DisplayGameOverWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void DisplayGameOverWidgetEvent();
+	
+	
+	
+	
 protected:
 	void AddStartupGameplayAbilities();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilites")
