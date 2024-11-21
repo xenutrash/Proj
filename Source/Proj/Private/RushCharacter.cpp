@@ -3,11 +3,16 @@
 
 #include "RushCharacter.h"
 
+#include "AssetTypeCategories.h"
 #include "Core/Abilites/RushAttributeSet.h"
 #include "Proj/RushAbilitySystemComponent.h"
 #include "Proj/RushGameplayAbility.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Blueprint/UserWidget.h"
+#include "GameFramework/PlayerState.h"
+#include "GenericPlatform/GenericPlatformCrashContext.h"
+#include "Kismet/GameplayStatics.h"
 #include "Proj/ProjPlayerController.h"
 #include "Proj/UI/RushHud.h"
 
@@ -202,6 +207,23 @@ void ARushCharacter::OnRep_PlayerState()
 }
 
 
+void ARushCharacter::DisplayGameOverWidget_Implementation()
+{
+	if(GameOverMenu == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No gameover widget added to player"));
+		return; 
+	}
+
+	GameOverMenu->AddToViewport();
+	UE_LOG(LogTemp, Warning, TEXT("Widget added to viewport"));
+}
+
+void ARushCharacter::DisplayGameOverWidgetEvent()
+{
+	DisplayGameOverWidget();
+}
+
 void ARushCharacter::AddStartupGameplayAbilities()
 {
 	check(AbilitySystemComponent);
@@ -238,6 +260,35 @@ UAbilitySystemComponent* ARushCharacter::GetAbilitySystemComponent() const
 	return AbilitySystemComponent;
 }
 
+void ARushCharacter::CreateGameOverMenu()
+{
+	if(GameOverMenuWidget == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No gameover widget added to player"));
+		return; 
+	}
+
+	if(GameOverMenu != nullptr)
+	{
+
+		UE_LOG(LogTemp, Warning, TEXT("A game over widget has already been created"));
+		return; 
+	}
+	
+	APlayerController* controllerCasted = Cast<APlayerController>(GetController());
+	
+	GameOverMenu = CreateWidget<UUserWidget>( controllerCasted, GameOverMenuWidget);
+	
+	if(GameOverMenu == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to create widget"));	
+		return;
+	}
+	//GameOverMenu->SetOwningPlayer(ControllerCasted);
+
+	//GameOverMenu->AddToViewport();
+	UE_LOG(LogTemp, Warning, TEXT("Spawned a widget"));
+}
 
 
 void ARushCharacter::SetBinds() 
