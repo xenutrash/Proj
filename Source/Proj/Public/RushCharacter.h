@@ -107,7 +107,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
 	TObjectPtr<URushAbilitySystemComponent> AbilitySystemComponent;
 	
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess=true))
+	UPROPERTY(BlueprintReadOnly, Transient, meta=(AllowPrivateAccess=true))
 	TObjectPtr<URushAttributeSet> Attributes;
 
 	UFUNCTION(BlueprintCallable)
@@ -136,6 +136,25 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Attributes")
 	URushAttributeSet* GetAttributeSet() const { return Attributes; }
+
+	UFUNCTION(BlueprintCallable, Category = "Widgets", BlueprintCosmetic)
+	void CreateGameOverMenu();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Widgets")
+	TSubclassOf<UUserWidget> GameOverMenuWidget;
+	
+	UPROPERTY(BlueprintReadOnly)
+	UUserWidget* GameOverMenu;
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, BlueprintCosmetic)
+	void DisplayGameOverWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void DisplayGameOverWidgetEvent();
+	
+	
+	
+	
 protected:
 	void AddStartupGameplayAbilities();
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Abilites")
