@@ -56,6 +56,12 @@ public:
 	UFUNCTION()
 	virtual void OnRep_Speed(const FGameplayAttributeData& OldValue);
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_UltimateCharge, Category= "Attributes")
+	FGameplayAttributeData UltimateCharge = 0;
+	ATTRIBUTE_ACCESSORS(URushAttributeSet, UltimateCharge)
+	UFUNCTION() 
+	virtual void OnRep_UltimateCharge(const FGameplayAttributeData& OldValue);
+
 
 	void AdjustAttributeForMaxChange(const FGameplayAttributeData& AffectedAttribute,
 		const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty) const;
