@@ -15,6 +15,7 @@ void URushAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 	DOREPLIFETIME(URushAttributeSet, Speed);
 	DOREPLIFETIME(URushAttributeSet, Armour);
 	DOREPLIFETIME(URushAttributeSet, MaxHealth);
+	DOREPLIFETIME(URushAttributeSet, UltimateCharge);
 
 }
 
@@ -89,9 +90,13 @@ void URushAttributeSet::OnRep_Speed(const FGameplayAttributeData& OldValue)
 }
 
 
+void URushAttributeSet::OnRep_UltimateCharge(const FGameplayAttributeData& OldValue)
+{
+}
+
 void URushAttributeSet::AdjustAttributeForMaxChange(const FGameplayAttributeData& AffectedAttribute,
-                                                     const FGameplayAttributeData& MaxAttribute, float NewMaxValue,
-                                                     const FGameplayAttribute& AffectedAttributeProperty) const
+                                                    const FGameplayAttributeData& MaxAttribute, float NewMaxValue,
+                                                    const FGameplayAttribute& AffectedAttributeProperty) const
 {
 	UAbilitySystemComponent* AbilityComp = GetOwningAbilitySystemComponent();
 	const float CurrentMaxValue = MaxAttribute.GetCurrentValue();
