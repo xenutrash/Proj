@@ -26,13 +26,11 @@ public:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 	
-	UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_Health, Category= "Attributes")
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category= "Attributes")
 	FGameplayAttributeData Health = 100;
 	ATTRIBUTE_ACCESSORS(URushAttributeSet, Health)
 	UFUNCTION() 
 	virtual void OnRep_Health(const FGameplayAttributeData& OldValue);
-
-
 
 	UPROPERTY(BlueprintReadWrite, ReplicatedUsing = OnRep_MaxHealth, Category= "Attributes")
 	FGameplayAttributeData MaxHealth = 100;
