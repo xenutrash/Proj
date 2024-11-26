@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerState.h"
 #include "GenericPlatform/GenericPlatformCrashContext.h"
 #include "Kismet/GameplayStatics.h"
@@ -139,6 +140,11 @@ FActiveGameplayEffectHandle ARushCharacter::AddPassiveEffect(const TSubclassOf<U
 		return ActiveGameplayEffectHandle;
 	}
 	return NULL;
+}
+
+void ARushCharacter::FlushMovementData(UCharacterMovementComponent* MovComp)
+{
+	MovComp->FlushServerMoves();
 }
 
 void ARushCharacter::AddActiveAbility(const TSubclassOf<URushGameplayAbility>& Ability) 
