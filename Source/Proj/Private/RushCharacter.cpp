@@ -3,16 +3,14 @@
 
 #include "RushCharacter.h"
 
-#include "AssetTypeCategories.h"
+
 #include "Core/Abilites/RushAttributeSet.h"
 #include "Proj/RushAbilitySystemComponent.h"
 #include "Proj/RushGameplayAbility.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
-#include "GameFramework/PlayerState.h"
-#include "GenericPlatform/GenericPlatformCrashContext.h"
-#include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Proj/ProjPlayerController.h"
 #include "Proj/UI/RushHud.h"
 
@@ -29,7 +27,7 @@ ARushCharacter::ARushCharacter()
 
 	Attributes = CreateDefaultSubobject<URushAttributeSet>(TEXT("Attributes"));
 
-	NetUpdateFrequency = 30.0f; 
+	NetUpdateFrequency = 80.0f; 
 	//Om det inte fungerar så är det fel här troligtvis
 	// if(APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	// {
@@ -139,6 +137,11 @@ FActiveGameplayEffectHandle ARushCharacter::AddPassiveEffect(const TSubclassOf<U
 		return ActiveGameplayEffectHandle;
 	}
 	return NULL;
+}
+
+void ARushCharacter::FlushMovementData(UCharacterMovementComponent* MovComp)
+{
+	MovComp->FlushServerMoves();
 }
 
 void ARushCharacter::AddActiveAbility(const TSubclassOf<URushGameplayAbility>& Ability) 
