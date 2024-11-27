@@ -27,7 +27,7 @@ ARushCharacter::ARushCharacter()
 
 	Attributes = CreateDefaultSubobject<URushAttributeSet>(TEXT("Attributes"));
 
-	NetUpdateFrequency = 30.0f; 
+	NetUpdateFrequency = 80.0f; 
 	//Om det inte fungerar så är det fel här troligtvis
 	// if(APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	// {
