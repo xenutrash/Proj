@@ -3,7 +3,7 @@
 
 #include "RushCharacter.h"
 
-#include "AssetTypeCategories.h"
+
 #include "Core/Abilites/RushAttributeSet.h"
 #include "Proj/RushAbilitySystemComponent.h"
 #include "Proj/RushGameplayAbility.h"
@@ -11,9 +11,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/PlayerState.h"
-#include "GenericPlatform/GenericPlatformCrashContext.h"
-#include "Kismet/GameplayStatics.h"
 #include "Proj/ProjPlayerController.h"
 #include "Proj/UI/RushHud.h"
 
