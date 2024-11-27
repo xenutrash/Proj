@@ -313,12 +313,11 @@ void ARushCharacter::SetBinds()
 
 void ARushCharacter::InitHud() const
 {
-	UE_LOG(LogTemp, Error, TEXT("hejsvejs"));
 	if(const APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
 		if(ARushHud* RushHud = Cast<ARushHud>(PlayerController->GetHUD()))
 		{
-			UE_LOG(LogTemp, Error, TEXT("DEN INITIERAS"));
+			
 			RushHud->Init();
 		}
 	}
