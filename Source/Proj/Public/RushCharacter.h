@@ -46,6 +46,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FActiveGameplayEffectHandle AddPassiveEffect(const TSubclassOf<class UGameplayEffect>& Effect);
+
+	UFUNCTION(BlueprintCallable, Category = "CppBPFLibrary")
+	static void FlushMovementData(class UCharacterMovementComponent* MovComp);
 	
 	UFUNCTION(BlueprintCallable)
 	void AddActiveAbility(const TSubclassOf<URushGameplayAbility>& Ability);
