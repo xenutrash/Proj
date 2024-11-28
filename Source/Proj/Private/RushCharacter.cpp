@@ -27,7 +27,7 @@ ARushCharacter::ARushCharacter()
 
 	Attributes = CreateDefaultSubobject<URushAttributeSet>(TEXT("Attributes"));
 
-	NetUpdateFrequency = 30.0f; 
+	NetUpdateFrequency = 80.0f; 
 	//Om det inte fungerar så är det fel här troligtvis
 	// if(APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	// {
@@ -313,12 +313,11 @@ void ARushCharacter::SetBinds()
 
 void ARushCharacter::InitHud() const
 {
-	UE_LOG(LogTemp, Error, TEXT("hejsvejs"));
 	if(const APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
 		if(ARushHud* RushHud = Cast<ARushHud>(PlayerController->GetHUD()))
 		{
-			UE_LOG(LogTemp, Error, TEXT("DEN INITIERAS"));
+			
 			RushHud->Init();
 		}
 	}
