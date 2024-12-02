@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Net/RepLayout.h"
 #include "Proj/ProjPlayerController.h"
 #include "Proj/UI/RushHud.h"
 
@@ -59,6 +60,7 @@ void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		EnhancedInputComponent->BindAction(BossAttackAction, ETriggerEvent::Triggered, this, &ARushCharacter::BossAttack);
 		EnhancedInputComponent->BindAction(TauntAction, ETriggerEvent::Triggered, this, &ARushCharacter::Taunt);
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &ARushCharacter::Dash);
+		EnhancedInputComponent->BindAction(ConfirmAction, ETriggerEvent::Triggered, this, &ARushCharacter::Confirm);
 	}
 	else
 	{
@@ -119,6 +121,14 @@ void ARushCharacter::Taunt()
 void ARushCharacter::Dash()
 {
 	OnDash();
+}
+
+void ARushCharacter::Confirm()
+{
+	if (AbilitySystemComponent)
+	{
+		AbilitySystemComponent->TargetConfirm();
+	}
 }
 
 

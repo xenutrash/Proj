@@ -39,6 +39,8 @@ class PROJ_API ARushCharacter : public AProjCharacter, public IAbilitySystemInte
 	UInputAction* DashAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* TauntAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ConfirmAction;
 
 public:
 	ARushCharacter();
@@ -87,6 +89,7 @@ protected:
 	void BossAttack();
 	void Taunt();
 	void Dash();
+	void Confirm();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnMove();
