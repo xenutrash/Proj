@@ -10,6 +10,7 @@
 void URushAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME_CONDITION_NOTIFY(URushAttributeSet, Health, COND_None, replica)
 	DOREPLIFETIME(URushAttributeSet, Health);
 	DOREPLIFETIME(URushAttributeSet, Damage);
 	DOREPLIFETIME(URushAttributeSet, Speed);
