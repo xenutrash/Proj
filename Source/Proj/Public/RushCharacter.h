@@ -157,7 +157,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DisplayGameOverWidgetEvent();
-	
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnAttributeSetInited(); 
 	
 	
 	
