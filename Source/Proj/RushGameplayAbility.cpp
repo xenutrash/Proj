@@ -5,4 +5,5 @@
 
 URushGameplayAbility::URushGameplayAbility()
 {
+	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;	
 }
