@@ -5,4 +5,6 @@
 
 URushGameplayAbility::URushGameplayAbility()
 {
+	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+	bServerRespectsRemoteAbilityCancellation = false;
 }
