@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "Proj/Data/AbilitySystemData.h"
 #include "RushAbilitySystemComponent.generated.h"
 
 /**
@@ -13,5 +14,9 @@ UCLASS()
 class PROJ_API URushAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
-	
+
+	UFUNCTION(BlueprintCallable)
+	void initializeAbilitySystemData(const FAbilitySystemInitializationData& IntializationData, AActor* InOwningActor, AActor* InAvatarActor);
+
+
 };

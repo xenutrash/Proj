@@ -10,13 +10,18 @@
 void URushAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME_CONDITION_NOTIFY(URushAttributeSet, Health, COND_None, replica)
-	DOREPLIFETIME(URushAttributeSet, Health);
-	DOREPLIFETIME(URushAttributeSet, Damage);
-	DOREPLIFETIME(URushAttributeSet, Speed);
-	DOREPLIFETIME(URushAttributeSet, Armour);
-	DOREPLIFETIME(URushAttributeSet, MaxHealth);
-	DOREPLIFETIME(URushAttributeSet, UltimateCharge);
+	DOREPLIFETIME_CONDITION_NOTIFY(URushAttributeSet, Health, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(URushAttributeSet, Damage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(URushAttributeSet, Speed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(URushAttributeSet, Armour, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(URushAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(URushAttributeSet, UltimateCharge, COND_None, REPNOTIFY_Always);
+	// DOREPLIFETIME(URushAttributeSet, Health);
+	// DOREPLIFETIME(URushAttributeSet, Damage);
+	// DOREPLIFETIME(URushAttributeSet, Speed);
+	// DOREPLIFETIME(URushAttributeSet, Armour);
+	// DOREPLIFETIME(URushAttributeSet, MaxHealth);
+	// DOREPLIFETIME(URushAttributeSet, UltimateCharge);
 
 }
 
