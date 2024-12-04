@@ -13,6 +13,7 @@
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
 #include "RushCharacter.h"
+#include "Blueprint/UserWidget.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -114,6 +115,44 @@ void AProjPlayerController::RotateCharacterTowardsClick()
 		}
 	}
 }
+
+bool AProjPlayerController::CreateGameOverWidget()
+{
+
+		if(!IsLocalController())
+		{
+			return false; 
+		}
+		
+		if(GameOverMenuWidget == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No gameover widget added to player"));
+			return false; 
+		}
+
+		if(GameOverMenu != nullptr)
+		{
+
+			UE_LOG(LogTemp, Warning, TEXT("A game over widget has already been created"));
+			return false; 
+		}
+	
+		GameOverMenu = CreateWidget<UUserWidget>( this, GameOverMenuWidget);
+	
+		if(GameOverMenu == nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Failed to create widget"));	
+			return false;
+		}
+	
+		GameOverMenu->AddToViewport();
+
+		UE_LOG(LogTemp, Warning, TEXT("Spawned a widget"));
+	return true; 
+}
+
+
+
 
 void AProjPlayerController::AcknowledgePossession(APawn* P)
 {
