@@ -44,6 +44,16 @@ public:
 	UInputAction* RotateAction;
 	void RotateCharacterTowardsClick();
 
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category="Widgets")
+	TSubclassOf<UUserWidget> GameOverMenuWidget;
+	
+	UPROPERTY(BlueprintReadOnly)
+	UUserWidget* GameOverMenu;
+
+	UFUNCTION(BlueprintCallable, Category = Widgets	)
+	bool CreateGameOverWidget();
+	
 	
 	
 protected:

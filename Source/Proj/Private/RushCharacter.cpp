@@ -256,6 +256,7 @@ void ARushCharacter::AddStartupGameplayAbilities()
 			AbilitySystemComponent->InitAbilityActorInfo(this,this);
 		}
 		bAbilitiesInitialized = true;
+		OnAttributeSetInited(); 
 	}
 }
 
