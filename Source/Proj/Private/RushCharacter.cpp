@@ -60,6 +60,7 @@ void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		EnhancedInputComponent->BindAction(BossAttackAction, ETriggerEvent::Triggered, this, &ARushCharacter::BossAttack);
 		EnhancedInputComponent->BindAction(TauntAction, ETriggerEvent::Triggered, this, &ARushCharacter::Taunt);
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &ARushCharacter::Dash);
+		EnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &ARushCharacter::MovementAbility);
 		EnhancedInputComponent->BindAction(ConfirmAction, ETriggerEvent::Triggered, this, &ARushCharacter::Confirm);
 	}
 	else
@@ -121,6 +122,11 @@ void ARushCharacter::Taunt()
 void ARushCharacter::Dash()
 {
 	OnDash();
+}
+
+void ARushCharacter::MovementAbility()
+{
+	OnMovementAbility();
 }
 
 void ARushCharacter::Confirm()

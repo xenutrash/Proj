@@ -38,6 +38,8 @@ class PROJ_API ARushCharacter : public AProjCharacter, public IAbilitySystemInte
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* DashAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* MovementAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* TauntAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ConfirmAction;
@@ -89,6 +91,7 @@ protected:
 	void BossAttack();
 	void Taunt();
 	void Dash();
+	void MovementAbility();
 	void Confirm();
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -105,6 +108,8 @@ protected:
 	void OnTaunt();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDash();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnMovementAbility();
 	
 	/***********
 		*Ability System Components 
