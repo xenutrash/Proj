@@ -53,7 +53,7 @@ public:
 	virtual void OnRep_Damage(const FGameplayAttributeData& OldValue);
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Speed, Category= "Attributes")
-	FGameplayAttributeData Speed = 300;
+	FGameplayAttributeData Speed = 0;
 	ATTRIBUTE_ACCESSORS(URushAttributeSet, Speed)
 	UFUNCTION()
 	virtual void OnRep_Speed(const FGameplayAttributeData& OldValue);
