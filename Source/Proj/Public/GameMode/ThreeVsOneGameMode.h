@@ -17,6 +17,7 @@ UCLASS()
 class PROJ_API AThreeVsOneGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+	bool bGameStarted = false; 
 public:
 
 	UFUNCTION()

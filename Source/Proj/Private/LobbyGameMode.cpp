@@ -3,3 +3,50 @@
 
 #include "LobbyGameMode.h"
 
+#include "AFGIMain.h"
+
+void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+	if(!NewPlayer->IsPlayerController())
+	{
+		return;
+	}
+	
+	GameInstance->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
+	// Update all characters
+	UpdateAllPlayerModels(); 
+}
+
+void ALobbyGameMode::Logout(AController* Exiting)
+{
+	Super::Logout(Exiting);
+	if(!Exiting->IsPlayerController())
+	{
+		return; 
+	}
+	GameInstance->RemovePlayer(Cast<APlayerController>(Exiting)); 
+}
+
+void ALobbyGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	const auto Gi = GetGameInstance();
+	if(Gi == nullptr)
+	{
+		
+		return; 
+	}
+
+	GameInstance = Cast<UAFGIMain>(Gi);
+
+	if(GameInstance == nullptr)
+	{
+		
+		return; 
+	}
+
+	
+}
+

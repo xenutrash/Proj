@@ -38,8 +38,7 @@ class PROJ_API UAFGIMain : public UAdvancedFriendsGameInstance
 	GENERATED_BODY()
 
 private:
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
-	TMap<int, FConnectedPlayer>* ConnectedPlayers;
+	TMap<int, FConnectedPlayer> ConnectedPlayers; 
 
 	void TravelServer() const;
 	
@@ -74,7 +73,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateSelectedSkin(const APlayerController* Controller, const FName NameOfSkin); 
 	
-	TMap<int, FConnectedPlayer>* GetConnectedPlayers() const;
+	TMap<int, FConnectedPlayer> GetConnectedPlayers() const;
 	
 	bool SetSelectedCharacter;
 

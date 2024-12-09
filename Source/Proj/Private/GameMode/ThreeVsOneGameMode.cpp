@@ -6,8 +6,10 @@
 #include "AFGIMain.h"
 #include "Proj/MythbreakPlayerState.h"
 
+
 void AThreeVsOneGameMode::OnAllPlayersConnected()
 {
+	bGameStarted = true; 
 	for (const auto Controller : ConnectedPlayers)
 	{
 		const auto MythState = Controller->GetPlayerState<AMythbreakPlayerState>();
@@ -18,7 +20,7 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 			continue;
 		}
 
-		const FConnectedPlayer* PlayerInfo = GameInstance->GetConnectedPlayers()->Find(MythState->GetUniqueID());
+		const FConnectedPlayer* PlayerInfo = GameInstance->GetConnectedPlayers().Find(MythState->GetUniqueID());
 
 		if(PlayerInfo == nullptr)
 		{
@@ -35,7 +37,7 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 void AThreeVsOneGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	const auto Gi = GetWorld()->GetGameInstance();
+	const auto Gi = GetGameInstance();
 	if(Gi == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Could not get gameInstance")); 
@@ -53,6 +55,13 @@ void AThreeVsOneGameMode::OnPostLogin(AController* NewPlayer)
 {
 	Super::OnPostLogin(NewPlayer);
 
+	if(bGameStarted)
+	{
+		// kick player here
+		
+		return; 
+	}
+	
 	if(!NewPlayer->IsPlayerController())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Not a player controller")); 
@@ -72,7 +81,7 @@ void AThreeVsOneGameMode::OnPostLogin(AController* NewPlayer)
 		return; 
 	}
 
-	if(ConnectedPlayers.Num() >= GameInstance->GetConnectedPlayers()->Num())
+	if(ConnectedPlayers.Num() >= GameInstance->GetConnectedPlayers().Num())
 	{
 		OnAllPlayersConnected();
 	}
