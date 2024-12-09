@@ -16,6 +16,16 @@ void AMythbreakPlayerState::AddDamageTaken(float DamageTaken)
 	PlayerStats.DamageTaken += DamageTaken;
 }
 
+float AMythbreakPlayerState::GetDamageTaken() const
+{
+	return PlayerStats.DamageTaken;
+}
+
+float AMythbreakPlayerState::GetDamageDealt() const
+{
+	return PlayerStats.DamageDealt;
+}
+
 void AMythbreakPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
