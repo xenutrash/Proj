@@ -25,6 +25,10 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	float GetDamageDealt() const;
+/*
+	UPROPERTY(BlueprintReadWrite)
+	int PlayerID;
+	*/
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 };
