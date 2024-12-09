@@ -25,6 +25,15 @@ public:
 	virtual void BeginPlay() override;
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	void UpdateAllPlayerModels(); 
+	void UpdateAllPlayerModels();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangePlayerCharacter(APlayerController* Controller, FName NameOfCharacter);
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void UpdateCharacterModel(APlayerController* Controller, FName NameOfCharacter);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SpawnPlayer(APlayerController* Controller); 
 	
 };

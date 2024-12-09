@@ -12,7 +12,7 @@ void UAFGIMain::TravelServer() const
 	
 }
 
- TMap<int, FConnectedPlayer> UAFGIMain::GetConnectedPlayers() const
+ TMap<uint32, FConnectedPlayer> UAFGIMain::GetConnectedPlayers() const
 {
 	return ConnectedPlayers; 
 }
@@ -21,6 +21,17 @@ FGameModeSettings UAFGIMain::GetGameModeSettings() const
 {
 	return GameModeSettings; 
 	
+}
+
+void UAFGIMain::CreateLanServer()
+{
+	auto Player = GetFirstLocalPlayerController();
+	
+	
+}
+
+void UAFGIMain::CreateOnlineServer()
+{
 }
 
 AMythbreakPlayerState* UAFGIMain::GetMythBreakState(const APlayerController* Controller) const
@@ -41,6 +52,20 @@ AMythbreakPlayerState* UAFGIMain::GetMythBreakState(const APlayerController* Con
 	return  State; 
 }
 
+void UAFGIMain::StartGameInstance()
+{
+	Super::StartGameInstance();
+	ConnectedPlayers.Reserve(10);
+}
+
+FGameInstancePIEResult UAFGIMain::StartPlayInEditorGameInstance(ULocalPlayer* LocalPlayer,
+	const FGameInstancePIEParameters& Params)
+{
+	ConnectedPlayers.Reserve(10);
+	return Super::StartPlayInEditorGameInstance(LocalPlayer, Params);
+}
+
+
 void UAFGIMain::StartGame()
 {
 
@@ -49,8 +74,10 @@ void UAFGIMain::StartGame()
 	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		const auto Controller = Iterator->Get();
+		
 		const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
-		if(MythState == nullptr)
+
+		if(!IsValid(MythState))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Invalid MythState")); 
 			continue; 
@@ -71,17 +98,22 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, bool isBoss)
 {
 
 	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
-	if(MythState == nullptr)
+	if(!IsValid(MythState))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Invalid MtyhState")); 
 		return; 
 	}
+
+	UE_LOG(LogTemp, Error, TEXT("%u"), MythState->GetUniqueID() );
+
+	
 
 	if(ConnectedPlayers.Contains(MythState->GetUniqueID()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player has already been added"));
 		return;
 	}
+	
 	
 	if(isBoss)
 	{
@@ -91,6 +123,7 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, bool isBoss)
 	{
 		ConnectedPlayers.Add(MythState->GetUniqueID(), FConnectedPlayer(DefaultHero, TEXT(""), MythState->GetUniqueID(), false));
 	}
+	
 	
 }
 

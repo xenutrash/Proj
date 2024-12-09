@@ -8,12 +8,14 @@
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
+	
 	if(!NewPlayer->IsPlayerController())
 	{
 		return;
 	}
 	
 	GameInstance->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
+	
 	// Update all characters
 	UpdateAllPlayerModels(); 
 }
@@ -47,6 +49,12 @@ void ALobbyGameMode::BeginPlay()
 		return; 
 	}
 
+	
+}
+
+void ALobbyGameMode::ChangePlayerCharacter(APlayerController* Controller, FName NameOfCharacter)
+{
+	GameInstance->UpdateSelectedPlayer(Controller, NameOfCharacter);
 	
 }
 

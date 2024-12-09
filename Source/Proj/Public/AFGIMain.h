@@ -14,12 +14,14 @@ USTRUCT(BlueprintType)
 struct FConnectedPlayer
 {
 	GENERATED_USTRUCT_BODY()
+	UPROPERTY(BlueprintReadOnly)
 	FName SelectedCharacter;
-	FName SelectedSkin; 
+	UPROPERTY(BlueprintReadOnly)
+	FName SelectedSkin;
+	UPROPERTY(BlueprintReadOnly)
 	float PlayerIndex;
+	UPROPERTY(BlueprintReadOnly)
 	bool IsBoss;
-	
-	
 };
 
 USTRUCT(BlueprintType)
@@ -38,7 +40,7 @@ class PROJ_API UAFGIMain : public UAdvancedFriendsGameInstance
 	GENERATED_BODY()
 
 private:
-	TMap<int, FConnectedPlayer> ConnectedPlayers; 
+	TMap<uint32, FConnectedPlayer> ConnectedPlayers; 
 
 	void TravelServer() const;
 	
@@ -54,6 +56,8 @@ private:
 	FString LevelFilePath = "/Game/TopDown/Maps/TopDownMap";
 
 	AMythbreakPlayerState* GetMythBreakState(const APlayerController* Controller) const; 
+	virtual void StartGameInstance() override;
+	virtual FGameInstancePIEResult StartPlayInEditorGameInstance(ULocalPlayer* LocalPlayer, const FGameInstancePIEParameters& Params) override;
 	
 public:
 
@@ -73,10 +77,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateSelectedSkin(const APlayerController* Controller, const FName NameOfSkin); 
 	
-	TMap<int, FConnectedPlayer> GetConnectedPlayers() const;
+	TMap<uint32, FConnectedPlayer> GetConnectedPlayers() const;
 	
 	bool SetSelectedCharacter;
 
-	FGameModeSettings GetGameModeSettings() const; 
+	FGameModeSettings GetGameModeSettings() const;
+
+	UFUNCTION(BlueprintCallable)
+	void CreateLanServer();
+	UFUNCTION(BlueprintCallable)
+	void CreateOnlineServer();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnServerCreated(); 
 	
 };
