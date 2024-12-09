@@ -62,6 +62,7 @@ void ARushCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 		EnhancedInputComponent->BindAction(DashAction, ETriggerEvent::Triggered, this, &ARushCharacter::Dash);
 		EnhancedInputComponent->BindAction(MovementAction, ETriggerEvent::Triggered, this, &ARushCharacter::MovementAbility);
 		EnhancedInputComponent->BindAction(ConfirmAction, ETriggerEvent::Triggered, this, &ARushCharacter::Confirm);
+		EnhancedInputComponent->BindAction(MouseAction, ETriggerEvent::Triggered, this, &ARushCharacter::Confirm);
 	}
 	else
 	{
