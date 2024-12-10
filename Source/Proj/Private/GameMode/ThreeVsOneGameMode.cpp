@@ -14,7 +14,8 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 		GameInstance = Cast<UAFGIMain>(GetGameInstance()); 
 	}
 	
-	bGameStarted = true; 
+	bGameStarted = true;
+	int Index = 0; 
 	for (const auto Controller : ConnectedPlayers)
 	{
 		const auto MythState = Controller->GetPlayerState<AMythbreakPlayerState>();
@@ -32,9 +33,12 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 			UE_LOG(LogTemp, Warning, TEXT("The player does not have a valid playerID")); 
 			continue;
 		}
-
+		
+		PlayerInfo->PlayerIndex = Index;
+		
 		UE_LOG(LogTemp, Log, TEXT("Spawning player with ID %i as %s "), Controller->GetUniqueID(), *PlayerInfo->SelectedCharacter.ToString() );
-		OnSpawnPlayer(Controller, *PlayerInfo, GameInstance->GetGameModeSettings()); 
+		OnSpawnPlayer(Controller, *PlayerInfo, GameInstance->GetGameModeSettings());
+		Index++; 
 	}
 	UE_LOG(LogTemp, Warning, TEXT("All players spawned"));
 	OnPlayersSpawned(GameInstance->GetGameModeSettings());
@@ -137,7 +141,7 @@ void AThreeVsOneGameMode::OnPostLogin(AController* NewPlayer)
 	ConnectedPlayers.Add(ConnectedPlayer); 
 	UE_LOG(LogTemp, Log, TEXT("Player with ID %i logged in sucessfully"), ConnectedPlayer->PlayerState->GetPlayerId())
 	
-	UE_LOG(LogTemp, Log, TEXT("Player with ID %i logged in sucessfully"), ConnectedPlayer->GetPlayerState<AMythbreakPlayerState>()->TestId)
+
 	
 	if(ConnectedPlayers.Num() >= GameInstance->GetConnectedPlayers()->Num())
 	{

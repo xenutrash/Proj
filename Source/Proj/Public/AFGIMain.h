@@ -23,7 +23,7 @@ struct FConnectedPlayer
 	UPROPERTY(BlueprintReadOnly)
 	FName SelectedSkin = TEXT("");;
 	UPROPERTY(BlueprintReadOnly)
-	float PlayerIndex = 0;
+	mutable float PlayerIndex = 0;
 	UPROPERTY(BlueprintReadOnly)
 	bool IsBoss = false;
 };
@@ -62,7 +62,10 @@ private:
 	virtual void StartGameInstance() override;
 	
 	TMap<FUniqueNetIdRepl , FConnectedPlayer> ConnectedPlayers;
-	void PrintAllUserIds(); 
+	void PrintAllUserIds();
+
+	UFUNCTION(BlueprintCallable)
+	 FConnectedPlayer GetPlayerInfo (APlayerController* Controller) const; 
 	
 public:
 

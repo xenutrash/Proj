@@ -75,6 +75,17 @@ void UAFGIMain::PrintAllUserIds()
 	
 }
 
+FConnectedPlayer UAFGIMain::GetPlayerInfo(APlayerController* Controller) const
+{
+
+	const auto MythState = GetMythBreakState(Controller);
+	const auto PlayerInfo = ConnectedPlayers.Find(MythState->GetUniqueId());
+	return *PlayerInfo; 
+	
+	
+	
+}
+
 UAFGIMain::UAFGIMain(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	ConnectedPlayers.Reserve(10);
@@ -125,7 +136,6 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsB
 		UE_LOG(LogTemp, Warning, TEXT("Invalid MtyhState")); 
 		return; 
 	}
-	MythState->SetTestID(1); 
 	
 	UE_LOG(LogTemp, Warning, TEXT("ID: %i "), MythState->PlayerId); 
 	std::map<int, int> Test2;

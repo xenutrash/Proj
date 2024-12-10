@@ -30,9 +30,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	float GetDamageDealt() const;
-	
-	UFUNCTION(BlueprintCallable, Category = "Stats")
-	void SetTestID(int Value); 
+
 	
 /*
 	UPROPERTY(BlueprintReadWrite)

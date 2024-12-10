@@ -35,10 +35,7 @@ float AMythbreakPlayerState::GetDamageDealt() const
 	return PlayerStats.DamageDealt;
 }
 
-void AMythbreakPlayerState::SetTestID(int Value)
-{
-	TestId = Value; 
-}
+
 
 void AMythbreakPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
