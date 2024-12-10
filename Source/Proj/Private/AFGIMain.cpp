@@ -37,6 +37,11 @@ void UAFGIMain::CreateOnlineServer()
 {
 }
 
+void UAFGIMain::ResetActivePlayers()
+{
+	ConnectedPlayers.Empty();
+}
+
 AMythbreakPlayerState* UAFGIMain::GetMythBreakState(const APlayerController* Controller) const
 {
 	if(Controller == nullptr)

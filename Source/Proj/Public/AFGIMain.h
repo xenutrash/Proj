@@ -98,6 +98,9 @@ public:
 	void CreateOnlineServer();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnServerCreated(); 
+	void OnServerCreated();
+
+	UFUNCTION(BlueprintCallable)
+	void ResetActivePlayers(); 
 	
 };
