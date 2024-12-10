@@ -11,6 +11,8 @@ class PROJ_API AMythbreakPlayerState: public APlayerState
 public:
 	AMythbreakPlayerState();
 
+	virtual void CopyProperties(APlayerState* PlayerState) override;
+	
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Category = "Stats")
 	FPlayerStats PlayerStats;
 
@@ -25,6 +27,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	float GetDamageDealt() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+	void SetTestID(int Value); 
+	
+	UPROPERTY()
+	int TestId = 0; 
 /*
 	UPROPERTY(BlueprintReadWrite)
 	int PlayerID;

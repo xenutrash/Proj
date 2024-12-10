@@ -2,10 +2,14 @@
 
 #pragma once
 
+#include <map>
+
 #include "CoreMinimal.h"
 #include "AdvancedFriendsGameInstance.h"
+
 #include "AFGIMain.generated.h"
 
+class FContainerTestClass;
 class AMythbreakPlayerState;
 /**
  * 
@@ -15,20 +19,20 @@ struct FConnectedPlayer
 {
 	GENERATED_USTRUCT_BODY()
 	UPROPERTY(BlueprintReadOnly)
-	FName SelectedCharacter;
+	FName SelectedCharacter = TEXT("");
 	UPROPERTY(BlueprintReadOnly)
-	FName SelectedSkin;
+	FName SelectedSkin = TEXT("");;
 	UPROPERTY(BlueprintReadOnly)
-	float PlayerIndex;
+	float PlayerIndex = 0;
 	UPROPERTY(BlueprintReadOnly)
-	bool IsBoss;
+	bool IsBoss = false;
 };
 
 USTRUCT(BlueprintType)
 struct FGameModeSettings
 {
 	GENERATED_USTRUCT_BODY()
-	float HealthMultiplier;
+	float HealthMultiplier = 1;
 	
 };
 
@@ -40,11 +44,10 @@ class PROJ_API UAFGIMain : public UAdvancedFriendsGameInstance
 	GENERATED_BODY()
 
 private:
-	TMap<uint32, FConnectedPlayer> ConnectedPlayers; 
 
 	void TravelServer() const;
 	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
 	FGameModeSettings GameModeSettings;
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
@@ -57,16 +60,20 @@ private:
 
 	AMythbreakPlayerState* GetMythBreakState(const APlayerController* Controller) const; 
 	virtual void StartGameInstance() override;
-	virtual FGameInstancePIEResult StartPlayInEditorGameInstance(ULocalPlayer* LocalPlayer, const FGameInstancePIEParameters& Params) override;
+	
+	TMap<FUniqueNetIdRepl , FConnectedPlayer> ConnectedPlayers;
 	
 public:
 
 
+	
+	UAFGIMain(const FObjectInitializer& ObjectInitializer);
+	
 	UFUNCTION(BlueprintCallable)
 	void StartGame();
 	
 	UFUNCTION(BlueprintCallable)
-	void AddNewPlayer(const APlayerController* Controller, bool isBoss = false);
+	void AddNewPlayer(const APlayerController* Controller, const bool IsBoss = false);
 	
 	UFUNCTION(BlueprintCallable)
 	bool RemovePlayer (const APlayerController* Controller);
@@ -77,10 +84,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateSelectedSkin(const APlayerController* Controller, const FName NameOfSkin); 
 	
-	TMap<uint32, FConnectedPlayer> GetConnectedPlayers() const;
+	const TMap<FUniqueNetIdRepl, FConnectedPlayer>* GetConnectedPlayers() const;
 	
-	bool SetSelectedCharacter;
-
 	FGameModeSettings GetGameModeSettings() const;
 
 	UFUNCTION(BlueprintCallable)

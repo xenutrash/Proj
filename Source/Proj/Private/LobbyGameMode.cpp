@@ -13,6 +13,10 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	{
 		return;
 	}
+	if(GameInstance == nullptr)
+	{
+		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
+	}
 	
 	GameInstance->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
 	
@@ -27,6 +31,11 @@ void ALobbyGameMode::Logout(AController* Exiting)
 	{
 		return; 
 	}
+	if(GameInstance == nullptr)
+	{
+		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
+	}
+	
 	GameInstance->RemovePlayer(Cast<APlayerController>(Exiting)); 
 }
 
@@ -54,6 +63,11 @@ void ALobbyGameMode::BeginPlay()
 
 void ALobbyGameMode::ChangePlayerCharacter(APlayerController* Controller, FName NameOfCharacter)
 {
+	if(GameInstance == nullptr)
+	{
+		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
+	}
+	
 	GameInstance->UpdateSelectedPlayer(Controller, NameOfCharacter);
 	
 }

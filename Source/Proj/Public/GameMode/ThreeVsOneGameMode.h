@@ -22,6 +22,8 @@ public:
 
 	UFUNCTION()
 	void OnAllPlayersConnected();
+
+	
 	virtual void BeginPlay() override;
 	UPROPERTY()
 	UAFGIMain* GameInstance;
@@ -30,14 +32,15 @@ public:
 	void OnSpawnPlayer(APlayerController* Controller, const FConnectedPlayer& PlayerInfo, const FGameModeSettings& GameModeSettings);
 	
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnPlayersSpawned(const FGameModeSettings& GameModeSettings); 
+	void OnPlayersSpawned(const FGameModeSettings& GameModeSettings);
 
+	virtual void GenericPlayerInitialization(AController* Controller) override; 
 	
 	UPROPERTY()
 	TArray<APlayerController*> ConnectedPlayers; 
 
 private: 
 	virtual void OnPostLogin(AController* NewPlayer) override;
-	
+	 
 	
 };
