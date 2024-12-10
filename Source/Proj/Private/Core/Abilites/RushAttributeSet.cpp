@@ -92,6 +92,12 @@ void URushAttributeSet::OnRep_Speed(const FGameplayAttributeData& OldValue)
 
 void URushAttributeSet::OnRep_UltimateCharge(const FGameplayAttributeData& OldValue)
 {
+	GAMEPLAYATTRIBUTE_REPNOTIFY(URushAttributeSet, UltimateCharge, OldValue);
+}
+
+void URushAttributeSet::OnRep_TakeDamageMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(URushAttributeSet, TakeDamageMultiplier, OldValue);
 }
 
 void URushAttributeSet::AdjustAttributeForMaxChange(const FGameplayAttributeData& AffectedAttribute,

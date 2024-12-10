@@ -64,6 +64,12 @@ public:
 	UFUNCTION() 
 	virtual void OnRep_UltimateCharge(const FGameplayAttributeData& OldValue);
 
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_UltimateCharge, Category= "Attributes")
+	FGameplayAttributeData TakeDamageMultiplier = 1;
+	ATTRIBUTE_ACCESSORS(URushAttributeSet, TakeDamageMultiplier)
+	UFUNCTION() 
+	virtual void OnRep_TakeDamageMultiplier(const FGameplayAttributeData& OldValue);
+
 
 	void AdjustAttributeForMaxChange(const FGameplayAttributeData& AffectedAttribute,
 		const FGameplayAttributeData& MaxAttribute, float NewMaxValue, const FGameplayAttribute& AffectedAttributeProperty) const;
