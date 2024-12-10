@@ -84,11 +84,13 @@ FConnectedPlayer UAFGIMain::GetPlayerInfo(APlayerController* Controller) const
 {
 
 	const auto MythState = GetMythBreakState(Controller);
+	if(!ConnectedPlayers.Contains(MythState->GetUniqueId()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("There is no player info"))
+		return FConnectedPlayer(); 
+	}
 	const auto PlayerInfo = ConnectedPlayers.Find(MythState->GetUniqueId());
 	return *PlayerInfo; 
-	
-	
-	
 }
 
 UAFGIMain::UAFGIMain(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
