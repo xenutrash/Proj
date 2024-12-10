@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "LobbyGameMode.generated.h"
 
+struct FConnectedPlayer;
 class UAFGIMain;
 /**
  * 
@@ -34,6 +35,10 @@ public:
 	void UpdateCharacterModel(APlayerController* Controller, FName NameOfCharacter);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void SpawnPlayer(APlayerController* Controller); 
+	void SpawnPlayer(APlayerController* Controller, FConnectedPlayer PlayerInfo); 
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void RemovePlayer(APlayerController* Controller); 
+
 	
 };

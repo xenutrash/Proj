@@ -149,16 +149,13 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsB
 		return;
 	}
 	
-	
 	if(IsBoss)
 	{
 		ConnectedPlayers.Add(Key, FConnectedPlayer(DefaultBoss, TEXT(""), 0, true));
-
 	}
 	else
 	{
 		ConnectedPlayers.Add(Key, FConnectedPlayer(DefaultHero, TEXT(""), 0, false));
-
 	}
 	
 }

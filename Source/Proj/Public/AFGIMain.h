@@ -64,12 +64,12 @@ private:
 	TMap<FUniqueNetIdRepl , FConnectedPlayer> ConnectedPlayers;
 	void PrintAllUserIds();
 
-	UFUNCTION(BlueprintCallable)
-	 FConnectedPlayer GetPlayerInfo (APlayerController* Controller) const; 
+
 	
 public:
 
-
+	UFUNCTION(BlueprintCallable)
+	FConnectedPlayer GetPlayerInfo (APlayerController* Controller) const; 
 	
 	UAFGIMain(const FObjectInitializer& ObjectInitializer);
 	

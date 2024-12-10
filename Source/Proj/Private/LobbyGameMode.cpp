@@ -19,9 +19,9 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	}
 	
 	GameInstance->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
-	
+
+	SpawnPlayer(NewPlayer, GameInstance->GetPlayerInfo(NewPlayer)); 
 	// Update all characters
-	UpdateAllPlayerModels(); 
 }
 
 void ALobbyGameMode::Logout(AController* Exiting)
@@ -36,7 +36,8 @@ void ALobbyGameMode::Logout(AController* Exiting)
 		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
 	}
 	
-	GameInstance->RemovePlayer(Cast<APlayerController>(Exiting)); 
+	GameInstance->RemovePlayer(Cast<APlayerController>(Exiting));
+	RemovePlayer(Cast<APlayerController>(Exiting)); 
 }
 
 void ALobbyGameMode::BeginPlay()
