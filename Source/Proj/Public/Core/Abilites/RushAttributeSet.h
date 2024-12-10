@@ -53,7 +53,7 @@ public:
 	virtual void OnRep_Damage(const FGameplayAttributeData& OldValue);
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Speed, Category= "Attributes")
-	FGameplayAttributeData Speed = 300;
+	FGameplayAttributeData Speed = 0;
 	ATTRIBUTE_ACCESSORS(URushAttributeSet, Speed)
 	UFUNCTION()
 	virtual void OnRep_Speed(const FGameplayAttributeData& OldValue);
@@ -63,6 +63,12 @@ public:
 	ATTRIBUTE_ACCESSORS(URushAttributeSet, UltimateCharge)
 	UFUNCTION() 
 	virtual void OnRep_UltimateCharge(const FGameplayAttributeData& OldValue);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_UltimateCharge, Category= "Attributes")
+	FGameplayAttributeData TakeDamageMultiplier = 1;
+	ATTRIBUTE_ACCESSORS(URushAttributeSet, TakeDamageMultiplier)
+	UFUNCTION() 
+	virtual void OnRep_TakeDamageMultiplier(const FGameplayAttributeData& OldValue);
 
 
 	void AdjustAttributeForMaxChange(const FGameplayAttributeData& AffectedAttribute,
