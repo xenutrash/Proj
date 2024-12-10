@@ -13,15 +13,6 @@ void AMythbreakPlayerState::CopyProperties(APlayerState* PlayerState)
 	PlayerState->SetUniqueId(this->GetUniqueId());
 	
 	UE_LOG(LogTemp, Warning, TEXT("COPY HAS BEEN CALLED"))
-	
-	auto MythState = Cast<AMythbreakPlayerState>(PlayerState);
-	if(MythState == nullptr)
-	{
-		return; 
-	}
-
-	MythState->SetTestID(this->TestId);
-	
 }
 
 void AMythbreakPlayerState::AddDamageDealt(float Damage)

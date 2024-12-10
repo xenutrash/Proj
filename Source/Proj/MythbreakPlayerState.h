@@ -1,8 +1,11 @@
 ﻿#pragma once
 
+
 #include "FPlayerStats.h"
 #include "GameFramework/PlayerState.h"
 #include "MythbreakPlayerState.generated.h"
+
+
 
 UCLASS()
 class PROJ_API AMythbreakPlayerState: public APlayerState
@@ -31,8 +34,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	void SetTestID(int Value); 
 	
-	UPROPERTY()
-	int TestId = 0; 
 /*
 	UPROPERTY(BlueprintReadWrite)
 	int PlayerID;

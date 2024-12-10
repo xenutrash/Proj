@@ -14,6 +14,7 @@ void UAFGIMain::TravelServer() const
 
 }
 
+
 const TMap<FUniqueNetIdRepl, FConnectedPlayer>* UAFGIMain::GetConnectedPlayers() const
 {
 	return &ConnectedPlayers; 
@@ -60,6 +61,19 @@ void UAFGIMain::StartGameInstance()
 	ConnectedPlayers.Reserve(10);
 }
 
+
+void UAFGIMain::PrintAllUserIds()
+{
+
+	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerID: %i"), Iterator->Get()->PlayerState->PlayerId)
+		UE_LOG(LogTemp, Warning, TEXT("UniqueID: %i"), Iterator->Get()->PlayerState->GetUniqueID())
+		
+	}
+
+	
+}
 
 UAFGIMain::UAFGIMain(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -117,11 +131,8 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsB
 	std::map<int, int> Test2;
 	TMap<uint32, FConnectedPlayer> Test3; 
 
-
 	const auto Key = MythState->GetUniqueId();
 	
-
-
 	if(ConnectedPlayers.Contains(Key))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player has already been added"));
@@ -132,10 +143,12 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsB
 	if(IsBoss)
 	{
 		ConnectedPlayers.Add(Key, FConnectedPlayer(DefaultBoss, TEXT(""), 0, true));
+
 	}
 	else
 	{
 		ConnectedPlayers.Add(Key, FConnectedPlayer(DefaultHero, TEXT(""), 0, false));
+
 	}
 	
 }
@@ -157,7 +170,9 @@ bool UAFGIMain::RemovePlayer(const APlayerController* Controller)
 
 void UAFGIMain::UpdateSelectedPlayer(const APlayerController* Controller, const FName NameOfCharacter)
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("PlayerID: %i"), Controller->PlayerState->PlayerId)
+	UE_LOG(LogTemp, Warning, TEXT("UniqueID: %i"), Controller->PlayerState->GetUniqueID())
+	
 	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
 	if(MythState == nullptr )
 	{
@@ -172,7 +187,8 @@ void UAFGIMain::UpdateSelectedPlayer(const APlayerController* Controller, const 
 	}
 
 	const auto Result = ConnectedPlayers.Find(MythState->GetUniqueId()); 
-	Result->SelectedCharacter = NameOfCharacter; 
+	Result->SelectedCharacter = NameOfCharacter;
+	
 
 	
 }
@@ -190,6 +206,7 @@ void UAFGIMain::UpdateSelectedSkin(const APlayerController* Controller, const FN
 	if(!ConnectedPlayers.Contains(MythState->GetUniqueId()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player does not exist"));
+		
 		return;
 	}
 

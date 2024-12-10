@@ -62,6 +62,7 @@ private:
 	virtual void StartGameInstance() override;
 	
 	TMap<FUniqueNetIdRepl , FConnectedPlayer> ConnectedPlayers;
+	void PrintAllUserIds(); 
 	
 public:
 

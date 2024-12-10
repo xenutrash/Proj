@@ -24,7 +24,7 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 			UE_LOG(LogTemp, Warning, TEXT("The player does not have a MythBreak Playerstate")); 
 			continue;
 		}
-
+		
 		const FConnectedPlayer* PlayerInfo = GameInstance->GetConnectedPlayers()->Find(MythState->GetUniqueId());
 
 		if(PlayerInfo == nullptr)
