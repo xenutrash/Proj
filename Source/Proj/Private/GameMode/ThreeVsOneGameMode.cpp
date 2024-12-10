@@ -64,7 +64,6 @@ void AThreeVsOneGameMode::GenericPlayerInitialization(AController* Controller)
 	if(bGameStarted)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Game has alreadd started"))
-		
 		return; 
 	}
 	
@@ -93,8 +92,6 @@ void AThreeVsOneGameMode::GenericPlayerInitialization(AController* Controller)
 	}
 	ConnectedPlayers.Add(ConnectedPlayer); 
 	UE_LOG(LogTemp, Log, TEXT("Player with ID %i logged in sucessfully"), ConnectedPlayer->PlayerState->GetPlayerId())
-	
-	UE_LOG(LogTemp, Log, TEXT("Player with ID %i logged in sucessfully"), ConnectedPlayer->GetPlayerState<AMythbreakPlayerState>()->TestId)
 	
 	if(ConnectedPlayers.Num() >= GameInstance->GetConnectedPlayers()->Num())
 	{

@@ -2,16 +2,16 @@
 
 
 #include "AFGIMain.h"
+
+#include "GameFramework/GameSession.h"
 #include "Proj/MythbreakPlayerState.h"
 
 void UAFGIMain::TravelServer() const
 {
 	const FString Command = "servertravel" + LevelFilePath;
-
 	
 	GetFirstLocalPlayerController()->ConsoleCommand(Command,true); 
-	
-	
+
 }
 
 const TMap<FUniqueNetIdRepl, FConnectedPlayer>* UAFGIMain::GetConnectedPlayers() const
@@ -63,19 +63,15 @@ void UAFGIMain::StartGameInstance()
 
 UAFGIMain::UAFGIMain(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-
 	ConnectedPlayers.Reserve(10);
 	UE_LOG(LogTemp, Warning, TEXT("I HAVE BEEN INITED")); 
 	GameModeSettings = FGameModeSettings(1);
-	
 }
 
 
 void UAFGIMain::StartGame()
 {
-
 	// Validates data
-	
 	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		const auto Controller = Iterator->Get();
