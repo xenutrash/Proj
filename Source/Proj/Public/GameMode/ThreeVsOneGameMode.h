@@ -34,7 +34,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnPlayersSpawned(const FGameModeSettings& GameModeSettings);
 
-	virtual void GenericPlayerInitialization(AController* Controller) override; 
+	virtual void GenericPlayerInitialization(AController* Controller) override;
+	virtual void Logout(AController* Exiting) override;
 	
 	UPROPERTY()
 	TArray<APlayerController*> ConnectedPlayers; 
