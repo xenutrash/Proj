@@ -40,6 +40,7 @@ void UAFGIMain::CreateOnlineServer()
 void UAFGIMain::ResetActivePlayers()
 {
 	ConnectedPlayers.Empty();
+	UE_LOG(LogTemp, Log, TEXT("AFGIMain: Reset active players"))
 }
 
 AMythbreakPlayerState* UAFGIMain::GetMythBreakState(const APlayerController* Controller) const
