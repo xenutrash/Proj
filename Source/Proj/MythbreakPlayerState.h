@@ -1,11 +1,8 @@
 ﻿#pragma once
 
-
 #include "FPlayerStats.h"
 #include "GameFramework/PlayerState.h"
 #include "MythbreakPlayerState.generated.h"
-
-
 
 UCLASS()
 class PROJ_API AMythbreakPlayerState: public APlayerState
@@ -14,8 +11,6 @@ class PROJ_API AMythbreakPlayerState: public APlayerState
 public:
 	AMythbreakPlayerState();
 
-	virtual void CopyProperties(APlayerState* PlayerState) override;
-	
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite, Category = "Stats")
 	FPlayerStats PlayerStats;
 
@@ -30,12 +25,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	float GetDamageDealt() const;
-
-	
-/*
-	UPROPERTY(BlueprintReadWrite)
-	int PlayerID;
-	*/
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 };

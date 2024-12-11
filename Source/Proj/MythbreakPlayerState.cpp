@@ -6,15 +6,6 @@ AMythbreakPlayerState::AMythbreakPlayerState()
 {
 }
 
-void AMythbreakPlayerState::CopyProperties(APlayerState* PlayerState)
-{
-	Super::CopyProperties(PlayerState);
-	PlayerState->SetPlayerId(this->GetPlayerId());
-	PlayerState->SetUniqueId(this->GetUniqueId());
-	
-	UE_LOG(LogTemp, Warning, TEXT("COPY HAS BEEN CALLED"))
-}
-
 void AMythbreakPlayerState::AddDamageDealt(float Damage)
 {
 	PlayerStats.DamageDealt += Damage;
@@ -34,8 +25,6 @@ float AMythbreakPlayerState::GetDamageDealt() const
 {
 	return PlayerStats.DamageDealt;
 }
-
-
 
 void AMythbreakPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
