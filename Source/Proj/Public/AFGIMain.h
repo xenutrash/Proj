@@ -45,7 +45,7 @@ class PROJ_API UAFGIMain : public UAdvancedFriendsGameInstance
 
 private:
 
-	void TravelServer() const;
+	void TravelServer(const FString Path) const;
 	
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess = "true"))
 	FGameModeSettings GameModeSettings;
@@ -56,13 +56,19 @@ private:
 	FName DefaultBoss = TEXT("Nixa");
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
-	FString LevelFilePath = "/Game/TopDown/Maps/TopDownMap";
+	FString DefaultMapLevelFilePath = "/Game/TopDown/Maps/TopDownMap";
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	FString LobbyMapFilePath = "/Game/Programming/Lobby/LobbyMenuMap";
+
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	FString UserSelectedMap = "/Game/TopDown/Maps/TopDownMap";
+	
 	AMythbreakPlayerState* GetMythBreakState(const APlayerController* Controller) const; 
 	virtual void StartGameInstance() override;
 	
 	TMap<FUniqueNetIdRepl , FConnectedPlayer> ConnectedPlayers;
-	void PrintAllUserIds();
+	void PrintAllUserIds() const;
 
 
 	
@@ -101,6 +107,9 @@ public:
 	void OnServerCreated();
 
 	UFUNCTION(BlueprintCallable)
-	void ResetActivePlayers(); 
+	void ResetActivePlayers();
+
+	UFUNCTION(BlueprintCallable)
+	void SetUserSelectMap(FString SelectedMap);
 	
 };

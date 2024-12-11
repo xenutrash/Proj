@@ -6,9 +6,15 @@
 #include "GameFramework/GameSession.h"
 #include "Proj/MythbreakPlayerState.h"
 
-void UAFGIMain::TravelServer() const
+void UAFGIMain::TravelServer(FString Path) const
 {
-	const FString Command = "servertravel" + LevelFilePath;
+	if(Path.IsEmpty())
+	{
+		UE_LOG(LogTemp, Warning,TEXT("AFGIMain: the provided path is empty, using default map: %s"), *DefaultMapLevelFilePath )
+		Path = DefaultMapLevelFilePath; 
+	}
+	
+	const FString Command = "servertravel" + Path;
 	
 	GetFirstLocalPlayerController()->ConsoleCommand(Command,true); 
 
@@ -43,6 +49,12 @@ void UAFGIMain::ResetActivePlayers()
 	UE_LOG(LogTemp, Log, TEXT("AFGIMain: Reset active players"))
 }
 
+void UAFGIMain::SetUserSelectMap(FString SelectedMap)
+{
+	UE_LOG(LogTemp, Log, TEXT("AFGIMain: Updated the selected map to: %s"),*SelectedMap )
+	UserSelectedMap = SelectedMap; 
+}
+
 AMythbreakPlayerState* UAFGIMain::GetMythBreakState(const APlayerController* Controller) const
 {
 	if(Controller == nullptr)
@@ -68,7 +80,7 @@ void UAFGIMain::StartGameInstance()
 }
 
 
-void UAFGIMain::PrintAllUserIds()
+void UAFGIMain::PrintAllUserIds() const 
 {
 
 	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
@@ -127,7 +139,7 @@ void UAFGIMain::StartGame()
 		
 	}
 	UE_LOG(LogTemp, Warning, TEXT("WE MOVING"))
-	TravelServer(); 
+	TravelServer(UserSelectedMap); 
 }
 
 void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsBoss)
