@@ -76,6 +76,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FConnectedPlayer GetPlayerInfo (APlayerController* Controller) const; 
+
+	UFUNCTION(BlueprintCallable)
+	void TravelToLobbyMap();
 	
 	UAFGIMain(const FObjectInitializer& ObjectInitializer);
 	
