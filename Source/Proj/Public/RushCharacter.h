@@ -46,7 +46,7 @@ class PROJ_API ARushCharacter : public AProjCharacter, public IAbilitySystemInte
 
 public:
 	ARushCharacter();
-
+	
 
 	UFUNCTION(BlueprintCallable)
 	FActiveGameplayEffectHandle AddPassiveEffect(const TSubclassOf<class UGameplayEffect>& Effect);
@@ -65,6 +65,8 @@ public:
 	
 	virtual void OnRep_PlayerState() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void InstantDeath();
 	
 
 	
