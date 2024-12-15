@@ -6,9 +6,15 @@
 #include "GameFramework/GameSession.h"
 #include "Proj/MythbreakPlayerState.h"
 
-void UAFGIMain::TravelServer() const
+void UAFGIMain::TravelServer(FString Path) const
 {
-	const FString Command = "servertravel" + LevelFilePath;
+	if(Path.IsEmpty())
+	{
+		UE_LOG(LogTemp, Warning,TEXT("AFGIMain: the provided path is empty, using default map: %s"), *DefaultMapLevelFilePath )
+		Path = DefaultMapLevelFilePath; 
+	}
+	
+	const FString Command = "servertravel" + Path;
 	
 	GetFirstLocalPlayerController()->ConsoleCommand(Command,true); 
 
@@ -43,18 +49,24 @@ void UAFGIMain::ResetActivePlayers()
 	UE_LOG(LogTemp, Log, TEXT("AFGIMain: Reset active players"))
 }
 
+void UAFGIMain::SetUserSelectMap(FString SelectedMap)
+{
+	UE_LOG(LogTemp, Log, TEXT("AFGIMain: Updated the selected map to: %s"),*SelectedMap )
+	UserSelectedMap = SelectedMap; 
+}
+
 AMythbreakPlayerState* UAFGIMain::GetMythBreakState(const APlayerController* Controller) const
 {
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Invalid controller")); 
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid controller")); 
 		return nullptr; 
 	}
 	
 	const auto State = Controller->GetPlayerState<AMythbreakPlayerState>(); 
 	if(State == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Invalid state")); 
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid state")); 
 		return nullptr; 
 	}
 	
@@ -68,17 +80,16 @@ void UAFGIMain::StartGameInstance()
 }
 
 
-void UAFGIMain::PrintAllUserIds()
+void UAFGIMain::PrintAllUserIds() const 
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("-------------------------------------------------------------"))
 	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("PlayerID: %i"), Iterator->Get()->PlayerState->PlayerId)
 		UE_LOG(LogTemp, Warning, TEXT("UniqueID: %i"), Iterator->Get()->PlayerState->GetUniqueID())
 		
 	}
-
-	
+	UE_LOG(LogTemp, Warning, TEXT("-------------------------------------------------------------"))
 }
 
 FConnectedPlayer UAFGIMain::GetPlayerInfo(APlayerController* Controller) const
@@ -87,23 +98,36 @@ FConnectedPlayer UAFGIMain::GetPlayerInfo(APlayerController* Controller) const
 	const auto MythState = GetMythBreakState(Controller);
 	if(!ConnectedPlayers.Contains(MythState->GetUniqueId()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("There is no player info"))
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: There is no player info"))
 		return FConnectedPlayer(); 
 	}
 	const auto PlayerInfo = ConnectedPlayers.Find(MythState->GetUniqueId());
 	return *PlayerInfo; 
 }
 
+void UAFGIMain::TravelToLobbyMap()
+{
+TravelServer(LobbyMapFilePath); 
+}
+
 UAFGIMain::UAFGIMain(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	ConnectedPlayers.Reserve(10);
-	UE_LOG(LogTemp, Warning, TEXT("I HAVE BEEN INITED")); 
 	GameModeSettings = FGameModeSettings(1);
 }
 
 
 void UAFGIMain::StartGame()
 {
+	if(GetWorld()->GetNumPlayerControllers() < ConnectedPlayers.Num())
+	{
+		// invalid states found
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid numbers of players"))
+		
+	}
+
+	TMap< FUniqueNetIdRepl, FConnectedPlayer> TempMap;
+	TempMap.Reserve(GetWorld()->GetNumPlayerControllers());
 	// Validates data
 	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
@@ -113,35 +137,41 @@ void UAFGIMain::StartGame()
 
 		if(!IsValid(MythState))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Invalid MythState")); 
+			UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MythState")); 
 			continue; 
 		}
 
 		if(!ConnectedPlayers.Contains(MythState->GetUniqueId()))
 		{
 			// Invalid player
-			UE_LOG(LogTemp, Warning, TEXT("Invalid Player"))
+			UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid Player"))
 			// kick player here
 			continue;
 		}
+		const auto ConnectPlayer = ConnectedPlayers.Find(MythState->GetUniqueId()); 
+		FConnectedPlayer CopiedInfo = FConnectedPlayer(ConnectPlayer->SelectedCharacter, ConnectPlayer->SelectedSkin,ConnectPlayer->PlayerIndex, ConnectPlayer->IsBoss ); 
+		
+		TempMap.Add(MythState->GetUniqueId(), CopiedInfo ); // Contains only valid data
 		
 	}
-	UE_LOG(LogTemp, Warning, TEXT("WE MOVING"))
-	TravelServer(); 
+	ConnectedPlayers.Empty();
+	ConnectedPlayers.Append(TempMap); 
+	UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Changing level"))
+	TravelServer(UserSelectedMap); 
 }
 
 void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsBoss)
 {
 	if(this == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT(":(") )
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: :(") )
 		return;
 	}
 
 	AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
 	if(!IsValid(MythState))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Invalid MtyhState")); 
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MtyhState")); 
 		return; 
 	}
 	
@@ -153,7 +183,7 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsB
 	
 	if(ConnectedPlayers.Contains(Key))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player has already been added"));
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Player has already been added"));
 		return;
 	}
 	
@@ -173,7 +203,7 @@ bool UAFGIMain::RemovePlayer(const APlayerController* Controller)
 	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
 	if(MythState == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Invalid MythState")); 
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MythState")); 
 		return false; 
 	}
 	if(ConnectedPlayers.Remove(MythState->GetUniqueId())>= 1 )
@@ -197,7 +227,7 @@ void UAFGIMain::UpdateSelectedPlayer(const APlayerController* Controller, const 
 
 	if(!ConnectedPlayers.Contains(MythState->GetUniqueId()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player does not exist"));
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Player does not exist"));
 		return;
 	}
 
@@ -214,13 +244,13 @@ void UAFGIMain::UpdateSelectedSkin(const APlayerController* Controller, const FN
 	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
 	if(MythState == nullptr )
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Invalid MythState")); 
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MythState")); 
 		return; 
 	}
 
 	if(!ConnectedPlayers.Contains(MythState->GetUniqueId()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player does not exist"));
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Player does not exist"));
 		
 		return;
 	}
