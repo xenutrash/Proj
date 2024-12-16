@@ -9,10 +9,10 @@ struct FPlayerStats
 	GENERATED_BODY()
 
 	UPROPERTY()
-	float DamageDealt;
+	float DamageDealt = 0 ;
 
 	UPROPERTY()
-	float DamageTaken;
+	float DamageTaken = 0;
 
 	FPlayerStats()
 		: DamageDealt(0.0f), DamageTaken(0.0f){}
