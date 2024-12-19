@@ -3,6 +3,8 @@
 
 #include "AFGIMain.h"
 
+#include <string>
+
 #include "GameFramework/GameSession.h"
 #include "Proj/MythbreakPlayerState.h"
 
@@ -168,7 +170,7 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsB
 		return;
 	}
 
-	AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
+	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
 	if(!IsValid(MythState))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MtyhState")); 
@@ -186,6 +188,7 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsB
 		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Player has already been added"));
 		return;
 	}
+	//FString Temp = DefaultPlayerName.ToString().Append(&std::to_string(ConnectedPlayers.Num())) ; 
 	
 	if(IsBoss)
 	{
@@ -257,5 +260,26 @@ void UAFGIMain::UpdateSelectedSkin(const APlayerController* Controller, const FN
 
 	const auto Result = ConnectedPlayers.Find(MythState->GetUniqueId()); 
 	Result->SelectedSkin = NameOfSkin; 
+	
+}
+
+void UAFGIMain::SetUserName(const APlayerController* Controller, FName PlayerName)
+{
+
+	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
+	if(MythState == nullptr )
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MythState")); 
+		return; 
+	}
+
+	if(!ConnectedPlayers.Contains(MythState->GetUniqueId()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Player does not exist"));
+		
+		return;
+	}
+
+	const auto Result = ConnectedPlayers.Find(MythState->GetUniqueId()); 
 	
 }
