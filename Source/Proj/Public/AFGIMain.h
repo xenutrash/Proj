@@ -21,11 +21,12 @@ struct FConnectedPlayer
 	UPROPERTY(BlueprintReadOnly)
 	FName SelectedCharacter = TEXT("");
 	UPROPERTY(BlueprintReadOnly)
-	FName SelectedSkin = TEXT("");;
+	FName SelectedSkin = TEXT("");
 	UPROPERTY(BlueprintReadOnly)
 	mutable float PlayerIndex = 0;
 	UPROPERTY(BlueprintReadOnly)
 	bool IsBoss = false;
+	FName PlayerName = TEXT(""); 
 };
 
 USTRUCT(BlueprintType)
@@ -55,6 +56,9 @@ private:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
 	FName DefaultBoss = TEXT("Nixa");
 
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
+	FName DefaultPlayerName = TEXT("Player");
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
 	FString DefaultMapLevelFilePath = "/Game/TopDown/Maps/TopDownMap";
 
@@ -70,7 +74,7 @@ private:
 	TMap<FUniqueNetIdRepl , FConnectedPlayer> ConnectedPlayers;
 	void PrintAllUserIds() const;
 
-
+	
 	
 public:
 
@@ -114,5 +118,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetUserSelectMap(FString SelectedMap);
+
+	UFUNCTION(BlueprintCallable)
+	void SetUserName(const APlayerController* Controller, FName PlayerName);
+	
 	
 };
+
+
+
