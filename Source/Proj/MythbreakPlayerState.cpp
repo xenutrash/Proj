@@ -13,7 +13,8 @@ AMythbreakPlayerState::AMythbreakPlayerState()
 void AMythbreakPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	DOREPLIFETIME(AMythbreakPlayerState, NameOfPlayer); 
+	DOREPLIFETIME(AMythbreakPlayerState, NameOfPlayer);
+	DOREPLIFETIME(AMythbreakPlayerState, PlayerStats);
 }
 
 
