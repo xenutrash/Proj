@@ -170,7 +170,7 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsB
 		return;
 	}
 
-	AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
+	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
 	if(!IsValid(MythState))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MtyhState")); 
@@ -281,5 +281,5 @@ void UAFGIMain::SetUserName(const APlayerController* Controller, FName PlayerNam
 	}
 
 	const auto Result = ConnectedPlayers.Find(MythState->GetUniqueId()); 
-	Result->PlayerName = PlayerName; 
+	
 }
