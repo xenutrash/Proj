@@ -26,7 +26,6 @@ struct FConnectedPlayer
 	mutable float PlayerIndex = 0;
 	UPROPERTY(BlueprintReadOnly)
 	bool IsBoss = false;
-	FName PlayerName = TEXT(""); 
 };
 
 USTRUCT(BlueprintType)
