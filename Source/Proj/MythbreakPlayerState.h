@@ -31,6 +31,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Stats")
 	float GetDamageDealt() const;
 
+	UPROPERTY(BlueprintReadWrite)
+	FString PlayerName = "Player"; 
 	
 /*
 	UPROPERTY(BlueprintReadWrite)
