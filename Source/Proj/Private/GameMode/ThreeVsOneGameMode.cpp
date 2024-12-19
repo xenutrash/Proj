@@ -71,6 +71,10 @@ void AThreeVsOneGameMode::GenericPlayerInitialization(AController* Controller)
 		UE_LOG(LogTemp, Log, TEXT("Game has alreadd started"))
 		return; 
 	}
+	if(Controller == nullptr)
+	{
+		return; 
+	}
 	
 	if(!Controller->IsPlayerController())
 	{
@@ -84,6 +88,7 @@ void AThreeVsOneGameMode::GenericPlayerInitialization(AController* Controller)
 		UE_LOG(LogTemp, Warning, TEXT("Failed to cast to a player controller")); 
 		return; 
 	}
+	
 	if(ConnectedPlayers.Contains(ConnectedPlayer))
 	{
 		// this should never be the case
@@ -164,6 +169,11 @@ void AThreeVsOneGameMode::OnPostLogin(AController* NewPlayer)
 		UE_LOG(LogTemp, Log, TEXT("PostLogin: Game has alreadd started"))
 		
 		return; 
+	}
+
+	if(NewPlayer == nullptr)
+	{
+		return;
 	}
 	
 	if(!NewPlayer->IsPlayerController())
