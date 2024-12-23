@@ -2,16 +2,37 @@
 
 #include "Net/UnrealNetwork.h"
 
+
 AMythbreakPlayerState::AMythbreakPlayerState()
 {
+
+
+
 }
+
+void AMythbreakPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AMythbreakPlayerState, NameOfPlayer);
+	DOREPLIFETIME(AMythbreakPlayerState, PlayerStats);
+}
+
 
 void AMythbreakPlayerState::CopyProperties(APlayerState* PlayerState)
 {
 	Super::CopyProperties(PlayerState);
-	PlayerState->SetPlayerId(this->GetPlayerId());
-	PlayerState->SetUniqueId(this->GetUniqueId());
-	
+
+	const auto State = Cast<AMythbreakPlayerState>(PlayerState);
+	if(State == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Not a mythstate"))
+		return; 
+	}
+	if(State->NameOfPlayer == this->NameOfPlayer)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NAMES ARE THE SAME"))
+	}
+	State->NameOfPlayer = this->NameOfPlayer; 
 	UE_LOG(LogTemp, Warning, TEXT("COPY HAS BEEN CALLED"))
 }
 
@@ -37,11 +58,6 @@ float AMythbreakPlayerState::GetDamageDealt() const
 
 
 
-void AMythbreakPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AMythbreakPlayerState, PlayerStats);
-}
 
 
