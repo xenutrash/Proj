@@ -8,7 +8,7 @@
 void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
-	
+
 	if(!NewPlayer->IsPlayerController())
 	{
 		return;
@@ -20,6 +20,7 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	
 	GameInstance->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
 
+	//
 	SpawnPlayer(NewPlayer, GameInstance->GetPlayerInfo(NewPlayer)); 
 	// Update all characters
 }
@@ -72,4 +73,33 @@ void ALobbyGameMode::ChangePlayerCharacter(APlayerController* Controller, FName 
 	GameInstance->UpdateSelectedPlayer(Controller, NameOfCharacter);
 	
 }
+
+void ALobbyGameMode::GenericPlayerInitialization(AController* Controller)
+{
+	Super::GenericPlayerInitialization(Controller);
+
+	if(bLoggedIn)
+	{
+		return; 
+	}
+	
+	if(!Controller->IsPlayerController())
+	{
+		return; 
+	}
+	if(GameInstance == nullptr)
+	{
+		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
+	}
+	
+	
+	const auto NewPlayer = Cast<APlayerController>(Controller); 
+	if(!GameInstance->GetConnectedPlayers()->Contains(NewPlayer->PlayerState->GetUniqueId()))
+	{
+		return; 
+	}
+	SpawnPlayer(NewPlayer, GameInstance->GetPlayerInfo(NewPlayer)); 
+}
+
+
 
