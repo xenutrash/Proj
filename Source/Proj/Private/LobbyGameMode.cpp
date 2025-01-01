@@ -74,6 +74,16 @@ void ALobbyGameMode::ChangePlayerCharacter(APlayerController* Controller, FName 
 	
 }
 
+void ALobbyGameMode::SetPLayerAsSpectator(APlayerController* Controller)
+{
+	if(GameInstance == nullptr)
+	{
+		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
+	}
+	
+	GameInstance->UpdateSelectedPlayer(Controller, FName("Spectator"));
+}
+
 void ALobbyGameMode::GenericPlayerInitialization(AController* Controller)
 {
 	Super::GenericPlayerInitialization(Controller);

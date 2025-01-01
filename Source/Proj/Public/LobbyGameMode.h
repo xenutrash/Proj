@@ -32,6 +32,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ChangePlayerCharacter(APlayerController* Controller, FName NameOfCharacter);
 	
+	UFUNCTION(BlueprintCallable)
+	void SetPLayerAsSpectator(APlayerController* Controller); 
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateCharacterModel(APlayerController* Controller, FName NameOfCharacter);
 

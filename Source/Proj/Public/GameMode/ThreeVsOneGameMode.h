@@ -38,7 +38,9 @@ public:
 	virtual void Logout(AController* Exiting) override;
 	
 	UPROPERTY()
-	TArray<APlayerController*> ConnectedPlayers; 
+	TArray<APlayerController*> ConnectedPlayers;
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpawnSpectator(APlayerController* Controller, const FConnectedPlayer& PlayerInfo);
 
 private: 
 	virtual void OnPostLogin(AController* NewPlayer) override;

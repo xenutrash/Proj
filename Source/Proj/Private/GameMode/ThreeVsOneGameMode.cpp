@@ -16,7 +16,7 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 	}
 	
 	bGameStarted = true;
-	int Index = 0; 
+	int Index = 0;
 	for (const auto Controller : ConnectedPlayers)
 	{
 		const auto MythState = Controller->GetPlayerState<AMythbreakPlayerState>();
@@ -38,7 +38,16 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 		PlayerInfo->PlayerIndex = Index;
 		
 		UE_LOG(LogTemp, Log, TEXT("Spawning player with ID %i as %s "), Controller->GetUniqueID(), *PlayerInfo->SelectedCharacter.ToString() );
-		OnSpawnPlayer(Controller, *PlayerInfo, GameInstance->GetGameModeSettings());
+		if(PlayerInfo->SelectedCharacter.IsEqual(FName("Spectator")))
+		{
+			OnSpawnSpectator(Controller, *PlayerInfo);
+			UE_LOG(LogTemp, Warning, TEXT("Spawning player as spectator")); 
+		}else
+		{
+			OnSpawnPlayer(Controller, *PlayerInfo, GameInstance->GetGameModeSettings());
+		}
+		
+		
 		Index++; 
 	}
 	UE_LOG(LogTemp, Warning, TEXT("All players spawned"));
