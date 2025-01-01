@@ -77,7 +77,14 @@ void AThreeVsOneGameMode::GenericPlayerInitialization(AController* Controller)
 
 	if(bGameStarted)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Game has alreadd started"))
+		UE_LOG(LogTemp, Log, TEXT("Game has already started"))
+		if(Controller->IsPlayerController())
+		{
+			const FConnectedPlayer FakeInfo = FConnectedPlayer();
+			const auto PlayerController = Cast<APlayerController>(Controller); 
+			OnSpawnSpectator(PlayerController, FakeInfo); 
+		}
+
 		return; 
 	}
 	if(Controller == nullptr)
