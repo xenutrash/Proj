@@ -8,15 +8,20 @@
 #include "Proj/MythbreakPlayerState.h"
 
 
-void AThreeVsOneGameMode::OnAllPlayersConnected()
+UAFGIMain* AThreeVsOneGameMode::GetGameInstance()
 {
 	if(GameInstance == nullptr)
 	{
-		GameInstance = Cast<UAFGIMain>(GetGameInstance()); 
+		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
 	}
+	return GameInstance; 
+}
+
+void AThreeVsOneGameMode::OnAllPlayersConnected()
+{
 	
 	bGameStarted = true;
-	int Index = 0; 
+	int Index = 0;
 	for (const auto Controller : ConnectedPlayers)
 	{
 		const auto MythState = Controller->GetPlayerState<AMythbreakPlayerState>();
@@ -27,7 +32,7 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 			continue;
 		}
 		
-		const FConnectedPlayer* PlayerInfo = GameInstance->GetConnectedPlayers()->Find(MythState->GetUniqueId());
+		const FConnectedPlayer* PlayerInfo = GetGameInstance()->GetConnectedPlayers()->Find(MythState->GetUniqueId());
 
 		if(PlayerInfo == nullptr)
 		{
@@ -38,7 +43,16 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 		PlayerInfo->PlayerIndex = Index;
 		
 		UE_LOG(LogTemp, Log, TEXT("Spawning player with ID %i as %s "), Controller->GetUniqueID(), *PlayerInfo->SelectedCharacter.ToString() );
-		OnSpawnPlayer(Controller, *PlayerInfo, GameInstance->GetGameModeSettings());
+		if(PlayerInfo->SelectedCharacter.IsEqual(FName("Spectator")))
+		{
+			OnSpawnSpectator(Controller, *PlayerInfo);
+			UE_LOG(LogTemp, Warning, TEXT("Spawning player as spectator")); 
+		}else
+		{
+			OnSpawnPlayer(Controller, *PlayerInfo, GetGameInstance()->GetGameModeSettings());
+		}
+		
+		
 		Index++; 
 	}
 	UE_LOG(LogTemp, Warning, TEXT("All players spawned"));
@@ -48,18 +62,6 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 void AThreeVsOneGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	const auto Gi = GetGameInstance();
-	if(Gi == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Could not get gameInstance")); 
-	}
-
-	GameInstance = Cast<UAFGIMain>(Gi);
-	if(GameInstance == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Invalid game instance")); 
-	} 
-	
 }
 
 void AThreeVsOneGameMode::GenericPlayerInitialization(AController* Controller)
@@ -68,7 +70,14 @@ void AThreeVsOneGameMode::GenericPlayerInitialization(AController* Controller)
 
 	if(bGameStarted)
 	{
-		UE_LOG(LogTemp, Log, TEXT("Game has alreadd started"))
+		UE_LOG(LogTemp, Log, TEXT("Game has already started"))
+		if(Controller->IsPlayerController())
+		{
+			const FConnectedPlayer FakeInfo = FConnectedPlayer();
+			const auto PlayerController = Cast<APlayerController>(Controller); 
+			OnSpawnSpectator(PlayerController, FakeInfo); 
+		}
+
 		return; 
 	}
 	if(Controller == nullptr)
@@ -96,14 +105,11 @@ void AThreeVsOneGameMode::GenericPlayerInitialization(AController* Controller)
 		return; 
 	}
 
-	if(GameInstance == nullptr)
-	{
-		GameInstance = Cast<UAFGIMain>(GetGameInstance()); 
-	}
+
 	ConnectedPlayers.Add(ConnectedPlayer); 
 	UE_LOG(LogTemp, Log, TEXT("Player with ID %i logged in sucessfully"), ConnectedPlayer->PlayerState->GetPlayerId())
 	
-	if(ConnectedPlayers.Num() >= GameInstance->GetConnectedPlayers()->Num())
+	if(ConnectedPlayers.Num() >= GetGameInstance()->GetConnectedPlayers()->Num())
 	{
 		OnAllPlayersConnected();
 	}
@@ -118,11 +124,7 @@ void AThreeVsOneGameMode::Logout(AController* Exiting)
 		UE_LOG(LogTemp, Warning, TEXT("Logout; Controller is null"))
 		return; 
 	}
-	if(GameInstance == nullptr)
-	{
-		GameInstance = Cast<UAFGIMain>(GetGameInstance()); 
-	}
-
+	
 	if(Exiting->IsPlayerController())
 	{
 		UE_LOG(LogTemp, Log, TEXT("Logout: Not a player controller"))
@@ -133,7 +135,8 @@ void AThreeVsOneGameMode::Logout(AController* Exiting)
 	{
 		return; 
 	}
-	GameInstance->RemovePlayer(Controller);
+	
+	GetGameInstance()->RemovePlayer(Controller);
 	
 	if(!bGameStarted)
 	{
@@ -195,16 +198,13 @@ void AThreeVsOneGameMode::OnPostLogin(AController* NewPlayer)
 		return; 
 	}
 
-	if(GameInstance == nullptr)
-	{
-		GameInstance = Cast<UAFGIMain>(GetGameInstance()); 
-	}
+
 	ConnectedPlayers.Add(ConnectedPlayer); 
 	UE_LOG(LogTemp, Log, TEXT("PostLogin: Player with ID %i logged in sucessfully"), ConnectedPlayer->PlayerState->GetPlayerId())
 	
 
 	
-	if(ConnectedPlayers.Num() >= GameInstance->GetConnectedPlayers()->Num())
+	if(ConnectedPlayers.Num() >= GetGameInstance()->GetConnectedPlayers()->Num())
 	{
 		OnAllPlayersConnected();
 	}

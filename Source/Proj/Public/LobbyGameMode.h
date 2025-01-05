@@ -22,7 +22,8 @@ class PROJ_API ALobbyGameMode : public AGameModeBase
 	UAFGIMain* GameInstance;
 	virtual void Logout(AController* Exiting) override;
 
-	bool bLoggedIn = false; 
+	bool bLoggedIn = false;
+	UAFGIMain* GetGameInstance(); 
 public:
 	virtual void BeginPlay() override;
 	
@@ -31,6 +32,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ChangePlayerCharacter(APlayerController* Controller, FName NameOfCharacter);
+	
+	UFUNCTION(BlueprintCallable)
+	void SetPLayerAsSpectator(APlayerController* Controller); 
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void UpdateCharacterModel(APlayerController* Controller, FName NameOfCharacter);
@@ -41,5 +45,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void RemovePlayer(APlayerController* Controller); 
 	virtual void GenericPlayerInitialization(AController* Controller) override;
+
+	
 	
 };
