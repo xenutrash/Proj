@@ -13,10 +13,15 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	{
 		return;
 	}
+
+	if(GetGameInstance()->GetAmountOfNoneSpectators() >= NumbersOfNoneSpectators)
+	{
+		GetGameInstance()->AddSpectator(NewPlayer);
+		SpawnPlayerAsSpectator(NewPlayer);
+		return; 
+	}
 	
 	GetGameInstance()->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
-
-	//
 	SpawnPlayer(NewPlayer, GetGameInstance()->GetPlayerInfo(NewPlayer)); 
 	// Update all characters
 }

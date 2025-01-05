@@ -123,7 +123,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	int GetAmountOfNoneSpectators() const;
-	
+
+	UFUNCTION(BlueprintCallable)
+	void AddSpectator(const APlayerController* Controller); 
 
 	
 };
