@@ -283,3 +283,39 @@ void UAFGIMain::SetUserName(const APlayerController* Controller, FName PlayerNam
 	const auto Result = ConnectedPlayers.Find(MythState->GetUniqueId()); 
 	
 }
+
+int UAFGIMain::GetAmountOfNoneSpectators() const
+{
+	int AmountOfNoneSpectators = 0;
+	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		const auto Controller = Iterator->Get();
+		
+		const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
+
+		if(!IsValid(MythState))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MythState")); 
+			continue; 
+		}
+
+		if(!ConnectedPlayers.Contains(MythState->GetUniqueId()))
+		{
+			// Invalid player
+			UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid Player"))
+			// kick player here
+			continue;
+		}
+		const auto ConnectPlayer = ConnectedPlayers.Find(MythState->GetUniqueId()); 
+
+		if( ConnectPlayer->SelectedCharacter == FName(TEXT("Spectator")) )
+		{
+			continue;
+		}
+		AmountOfNoneSpectators++; 
+		
+	}
+	
+	return AmountOfNoneSpectators;
+	
+}
