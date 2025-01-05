@@ -53,6 +53,9 @@ public:
 	
 	virtual void GenericPlayerInitialization(AController* Controller) override;
 
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool MaxPlayersReached() const; 
 	
 	
 };

@@ -83,5 +83,12 @@ void ALobbyGameMode::GenericPlayerInitialization(AController* Controller)
 	SpawnPlayer(NewPlayer, GetGameInstance()->GetPlayerInfo(NewPlayer)); 
 }
 
+bool ALobbyGameMode::MaxPlayersReached() const
+{
+	// Makes sure it stays const
+	const auto Gm =  Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
+	return Gm->GetAmountOfNoneSpectators() >= NumbersOfNoneSpectators; 
+}
+
 
 
