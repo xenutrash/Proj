@@ -13,15 +13,16 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	{
 		return;
 	}
-	if(GameInstance == nullptr)
+
+	if(GetGameInstance()->GetAmountOfNoneSpectators() >= NumbersOfNoneSpectators)
 	{
-		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
+		GetGameInstance()->AddSpectator(NewPlayer);
+		SpawnPlayerAsSpectator(NewPlayer);
+		return; 
 	}
 	
-	GameInstance->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
-
-	//
-	SpawnPlayer(NewPlayer, GameInstance->GetPlayerInfo(NewPlayer)); 
+	GetGameInstance()->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
+	SpawnPlayer(NewPlayer, GetGameInstance()->GetPlayerInfo(NewPlayer)); 
 	// Update all characters
 }
 
@@ -32,46 +33,32 @@ void ALobbyGameMode::Logout(AController* Exiting)
 	{
 		return; 
 	}
+	GetGameInstance()->RemovePlayer(Cast<APlayerController>(Exiting));
+	RemovePlayer(Cast<APlayerController>(Exiting)); 
+}
+
+UAFGIMain* ALobbyGameMode::GetGameInstance()
+{
 	if(GameInstance == nullptr)
 	{
 		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
 	}
-	
-	GameInstance->RemovePlayer(Cast<APlayerController>(Exiting));
-	RemovePlayer(Cast<APlayerController>(Exiting)); 
+	return GameInstance; 
 }
 
 void ALobbyGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-
-	const auto Gi = GetGameInstance();
-	if(Gi == nullptr)
-	{
-		
-		return; 
-	}
-
-	GameInstance = Cast<UAFGIMain>(Gi);
-
-	if(GameInstance == nullptr)
-	{
-		
-		return; 
-	}
-
-	
 }
 
 void ALobbyGameMode::ChangePlayerCharacter(APlayerController* Controller, FName NameOfCharacter)
 {
-	if(GameInstance == nullptr)
-	{
-		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
-	}
-	
-	GameInstance->UpdateSelectedPlayer(Controller, NameOfCharacter);
-	
+	GetGameInstance()->UpdateSelectedPlayer(Controller, NameOfCharacter);
+}
+
+void ALobbyGameMode::SetPLayerAsSpectator(APlayerController* Controller)
+{
+	GetGameInstance()->UpdateSelectedPlayer(Controller, FName("Spectator"));
 }
 
 void ALobbyGameMode::GenericPlayerInitialization(AController* Controller)
@@ -87,18 +74,20 @@ void ALobbyGameMode::GenericPlayerInitialization(AController* Controller)
 	{
 		return; 
 	}
-	if(GameInstance == nullptr)
-	{
-		GameInstance = Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
-	}
-	
 	
 	const auto NewPlayer = Cast<APlayerController>(Controller); 
-	if(!GameInstance->GetConnectedPlayers()->Contains(NewPlayer->PlayerState->GetUniqueId()))
+	if(!GetGameInstance()->GetConnectedPlayers()->Contains(NewPlayer->PlayerState->GetUniqueId()))
 	{
 		return; 
 	}
-	SpawnPlayer(NewPlayer, GameInstance->GetPlayerInfo(NewPlayer)); 
+	SpawnPlayer(NewPlayer, GetGameInstance()->GetPlayerInfo(NewPlayer)); 
+}
+
+bool ALobbyGameMode::MaxPlayersReached() const
+{
+	// Makes sure it stays const
+	const auto Gm =  Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
+	return Gm->GetAmountOfNoneSpectators() >= NumbersOfNoneSpectators; 
 }
 
 
