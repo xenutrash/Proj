@@ -13,10 +13,15 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 	{
 		return;
 	}
+
+	if(GetGameInstance()->GetAmountOfNoneSpectators() >= NumbersOfNoneSpectators)
+	{
+		GetGameInstance()->AddSpectator(NewPlayer);
+		SpawnPlayerAsSpectator(NewPlayer);
+		return; 
+	}
 	
 	GetGameInstance()->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
-
-	//
 	SpawnPlayer(NewPlayer, GetGameInstance()->GetPlayerInfo(NewPlayer)); 
 	// Update all characters
 }
@@ -76,6 +81,13 @@ void ALobbyGameMode::GenericPlayerInitialization(AController* Controller)
 		return; 
 	}
 	SpawnPlayer(NewPlayer, GetGameInstance()->GetPlayerInfo(NewPlayer)); 
+}
+
+bool ALobbyGameMode::MaxPlayersReached() const
+{
+	// Makes sure it stays const
+	const auto Gm =  Cast<UAFGIMain>(GetWorld()->GetGameInstance()); 
+	return Gm->GetAmountOfNoneSpectators() >= NumbersOfNoneSpectators; 
 }
 
 
