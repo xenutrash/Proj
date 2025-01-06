@@ -177,10 +177,8 @@ void UAFGIMain::AddNewPlayer(const APlayerController* Controller, const bool IsB
 		return; 
 	}
 	
-	UE_LOG(LogTemp, Warning, TEXT("ID: %i "), MythState->PlayerId); 
-	std::map<int, int> Test2;
-	TMap<uint32, FConnectedPlayer> Test3; 
-
+	//UE_LOG(LogTemp, Warning, TEXT("ID: %i "), MythState->PlayerId); 
+	
 	const auto Key = MythState->GetUniqueId();
 	
 	if(ConnectedPlayers.Contains(Key))
@@ -281,5 +279,66 @@ void UAFGIMain::SetUserName(const APlayerController* Controller, FName PlayerNam
 	}
 
 	const auto Result = ConnectedPlayers.Find(MythState->GetUniqueId()); 
+	
+}
+
+int UAFGIMain::GetAmountOfNoneSpectators() const
+{
+	int AmountOfNoneSpectators = 0;
+	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		const auto Controller = Iterator->Get();
+		
+		const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
+
+		if(!IsValid(MythState))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MythState")); 
+			continue; 
+		}
+
+		if(!ConnectedPlayers.Contains(MythState->GetUniqueId()))
+		{
+			// Invalid player
+			//UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid Player"))
+
+			continue;
+		}
+		const auto ConnectPlayer = ConnectedPlayers.Find(MythState->GetUniqueId()); 
+
+		if( ConnectPlayer->SelectedCharacter == FName(TEXT("Spectator")) )
+		{
+			continue;
+		}
+		AmountOfNoneSpectators++; 
+		
+	}
+	
+	return AmountOfNoneSpectators;
+	
+}
+
+void UAFGIMain::AddSpectator(const APlayerController* Controller)
+{
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid Controller")); 
+		return;
+	}
+	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
+	if(!IsValid(MythState))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Invalid MythState")); 
+		return; 
+	}
+	const auto Key = MythState->GetUniqueId();
+	
+	if(ConnectedPlayers.Contains(Key))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AFGIMain: Player has already been added"));
+		return;
+	}
+	
+	ConnectedPlayers.Add(Key, FConnectedPlayer(FName(TEXT("Spectator")), TEXT(""), 0, false));
 	
 }
