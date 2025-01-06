@@ -120,7 +120,13 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetUserName(const APlayerController* Controller, FName PlayerName);
-	
+
+	UFUNCTION(BlueprintCallable)
+	int GetAmountOfNoneSpectators() const;
+
+	UFUNCTION(BlueprintCallable)
+	void AddSpectator(const APlayerController* Controller); 
+
 	
 };
 
