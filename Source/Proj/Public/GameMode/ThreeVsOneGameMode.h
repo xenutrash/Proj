@@ -17,7 +17,11 @@ UCLASS()
 class PROJ_API AThreeVsOneGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	bool bGameStarted = false; 
+	bool bGameStarted = false;
+	UPROPERTY()
+	UAFGIMain* GameInstance;
+	UAFGIMain* GetGameInstance();
+	
 public:
 
 	UFUNCTION()
@@ -25,8 +29,7 @@ public:
 
 	
 	virtual void BeginPlay() override;
-	UPROPERTY()
-	UAFGIMain* GameInstance;
+
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSpawnPlayer(APlayerController* Controller, const FConnectedPlayer& PlayerInfo, const FGameModeSettings& GameModeSettings);
@@ -38,7 +41,9 @@ public:
 	virtual void Logout(AController* Exiting) override;
 	
 	UPROPERTY()
-	TArray<APlayerController*> ConnectedPlayers; 
+	TArray<APlayerController*> ConnectedPlayers;
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnSpawnSpectator(APlayerController* Controller, const FConnectedPlayer& PlayerInfo);
 
 private: 
 	virtual void OnPostLogin(AController* NewPlayer) override;
