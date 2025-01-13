@@ -78,7 +78,7 @@ private:
 public:
 
 	UFUNCTION(BlueprintCallable)
-	FConnectedPlayer GetPlayerInfo (APlayerController* Controller) const; 
+	FConnectedPlayer GetPlayerInfo (const APlayerController* Controller) const; 
 
 	UFUNCTION(BlueprintCallable)
 	void TravelToLobbyMap();
