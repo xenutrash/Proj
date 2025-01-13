@@ -26,7 +26,7 @@ class PROJ_API ALobbyGameMode : public AGameModeBase
 	virtual void Logout(AController* Exiting) override;
 
 	bool bLoggedIn = false;
-	UAFGIMain* GetGameInstance();
+	UAFGIMain* GetGameAfgiInstance();
 	
 	UPROPERTY()
 	TMap<const APlayerController* , bool> ReadyList;
