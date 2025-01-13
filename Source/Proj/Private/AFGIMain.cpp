@@ -88,7 +88,7 @@ void UAFGIMain::PrintAllUserIds() const
 	UE_LOG(LogTemp, Warning, TEXT("-------------------------------------------------------------"))
 }
 
-FConnectedPlayer UAFGIMain::GetPlayerInfo(APlayerController* Controller) const
+FConnectedPlayer UAFGIMain::GetPlayerInfo(const APlayerController* Controller) const
 {
 
 	const auto MythState = GetMythBreakState(Controller);
