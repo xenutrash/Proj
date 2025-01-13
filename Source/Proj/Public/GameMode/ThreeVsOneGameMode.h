@@ -21,16 +21,15 @@ class PROJ_API AThreeVsOneGameMode : public AGameModeBase
 	UPROPERTY()
 	UAFGIMain* GameInstance;
 	UAFGIMain* GetGameInstance();
+
 	
 public:
 
 	UFUNCTION()
 	void OnAllPlayersConnected();
-
 	
 	virtual void BeginPlay() override;
-
-
+	
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnSpawnPlayer(APlayerController* Controller, const FConnectedPlayer& PlayerInfo, const FGameModeSettings& GameModeSettings);
 	
