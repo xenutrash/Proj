@@ -26,7 +26,10 @@ class PROJ_API ALobbyGameMode : public AGameModeBase
 	virtual void Logout(AController* Exiting) override;
 
 	bool bLoggedIn = false;
-	UAFGIMain* GetGameInstance(); 
+	UAFGIMain* GetGameInstance();
+	
+	UPROPERTY()
+	TMap<const APlayerController* , bool> ReadyList;
 public:
 	virtual void BeginPlay() override;
 	
@@ -53,6 +56,17 @@ public:
 	
 	virtual void GenericPlayerInitialization(AController* Controller) override;
 
+	UFUNCTION(BlueprintCallable)
+	void SetReadyStateForPlayer(const APlayerController* PlayerController, const bool IsReady);
+	UFUNCTION(BlueprintCallable)
+	bool GetReadyStateForPlayer(const APlayerController* PlayerController);
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+	bool ArePlayersReady() const;
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnReadyStateChanged(const APlayerController* Controller, const bool IsReady);
+	UFUNCTION(BlueprintCallable)
+	void RemoveReadyState(const APlayerController* Controller);
+	
 
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool MaxPlayersReached() const; 

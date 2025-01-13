@@ -83,6 +83,54 @@ void ALobbyGameMode::GenericPlayerInitialization(AController* Controller)
 	SpawnPlayer(NewPlayer, GetGameInstance()->GetPlayerInfo(NewPlayer)); 
 }
 
+void ALobbyGameMode::SetReadyStateForPlayer(const APlayerController* PlayerController, const bool IsReady)
+{
+	ReadyList.Add(PlayerController, IsReady);
+	OnReadyStateChanged(PlayerController, IsReady); 
+}
+
+bool ALobbyGameMode::GetReadyStateForPlayer(const APlayerController* PlayerController)
+{
+	if(!ReadyList.Contains(PlayerController))
+	{
+		ReadyList.Add(PlayerController, false);
+	}
+	
+	return ReadyList[PlayerController];
+}
+
+bool ALobbyGameMode::ArePlayersReady() const
+{
+	
+	for (const auto PresenceKey : ReadyList)
+	{
+		if(PresenceKey.Key == nullptr)
+		{
+			continue;
+		}
+		
+		if (!PresenceKey.Value)
+		{
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+void ALobbyGameMode::RemoveReadyState(const APlayerController* Controller)
+{
+	if(Controller == nullptr)
+	{
+		return;
+	}
+	if(!ReadyList.Contains(Controller))
+	{
+		return;
+	}
+	ReadyList.Remove(Controller);
+}
+
 bool ALobbyGameMode::MaxPlayersReached() const
 {
 	// Makes sure it stays const

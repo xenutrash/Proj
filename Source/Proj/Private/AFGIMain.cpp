@@ -2,10 +2,6 @@
 
 
 #include "AFGIMain.h"
-
-#include <string>
-
-#include "GameFramework/GameSession.h"
 #include "Proj/MythbreakPlayerState.h"
 
 void UAFGIMain::TravelServer(FString Path) const
@@ -37,8 +33,6 @@ FGameModeSettings UAFGIMain::GetGameModeSettings() const
 void UAFGIMain::CreateLanServer()
 {
 	auto Player = GetFirstLocalPlayerController();
-	
-	
 }
 
 void UAFGIMain::CreateOnlineServer()
@@ -87,7 +81,7 @@ void UAFGIMain::PrintAllUserIds() const
 	UE_LOG(LogTemp, Warning, TEXT("-------------------------------------------------------------"))
 	for(FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerID: %i"), Iterator->Get()->PlayerState->PlayerId)
+		UE_LOG(LogTemp, Warning, TEXT("PlayerID: %i"), Iterator->Get()->PlayerState->GetPlayerId())
 		UE_LOG(LogTemp, Warning, TEXT("UniqueID: %i"), Iterator->Get()->PlayerState->GetUniqueID())
 		
 	}
@@ -216,7 +210,7 @@ bool UAFGIMain::RemovePlayer(const APlayerController* Controller)
 
 void UAFGIMain::UpdateSelectedPlayer(const APlayerController* Controller, const FName NameOfCharacter)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PlayerID: %i"), Controller->PlayerState->PlayerId)
+	UE_LOG(LogTemp, Warning, TEXT("PlayerID: %i"), Controller->PlayerState->GetPlayerId())
 	UE_LOG(LogTemp, Warning, TEXT("UniqueID: %i"), Controller->PlayerState->GetUniqueID())
 	
 	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
