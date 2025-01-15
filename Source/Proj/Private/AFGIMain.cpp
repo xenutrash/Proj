@@ -210,8 +210,8 @@ bool UAFGIMain::RemovePlayer(const APlayerController* Controller)
 
 void UAFGIMain::UpdateSelectedPlayer(const APlayerController* Controller, const FName NameOfCharacter)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PlayerID: %i"), Controller->PlayerState->GetPlayerId())
-	UE_LOG(LogTemp, Warning, TEXT("UniqueID: %i"), Controller->PlayerState->GetUniqueID())
+	//UE_LOG(LogTemp, Warning, TEXT("PlayerID: %i"), Controller->PlayerState->GetPlayerId())
+	//UE_LOG(LogTemp, Warning, TEXT("UniqueID: %i"), Controller->PlayerState->GetUniqueID())
 	
 	const AMythbreakPlayerState* MythState = GetMythBreakState(Controller);
 	if(MythState == nullptr )
