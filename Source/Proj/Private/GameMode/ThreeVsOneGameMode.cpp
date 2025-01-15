@@ -46,7 +46,7 @@ void AThreeVsOneGameMode::OnAllPlayersConnected()
 		if(PlayerInfo->SelectedCharacter.IsEqual(FName("Spectator")))
 		{
 			OnSpawnSpectator(Controller, *PlayerInfo);
-			UE_LOG(LogTemp, Warning, TEXT("Spawning player as spectator")); 
+			UE_LOG(LogTemp, Log, TEXT("Spawning player as spectator")); 
 		}else
 		{
 			OnSpawnPlayer(Controller, *PlayerInfo, GetGameInstance()->GetGameModeSettings());
@@ -127,7 +127,7 @@ void AThreeVsOneGameMode::Logout(AController* Exiting)
 	
 	if(Exiting->IsPlayerController())
 	{
-		UE_LOG(LogTemp, Log, TEXT("Logout: Not a player controller"))
+		UE_LOG(LogTemp, Warning, TEXT("Logout: Not a player controller"))
 		return;
 	}
 	const auto Controller = Cast<APlayerController>(Exiting);
@@ -150,7 +150,7 @@ void AThreeVsOneGameMode::Logout(AController* Exiting)
 		return; 
 	}
 
-	// take damage here
+
 	const auto RushCharacter = Cast<ARushCharacter>(ControlledPawn);
 	
 	if(RushCharacter == nullptr)
@@ -200,7 +200,7 @@ void AThreeVsOneGameMode::OnPostLogin(AController* NewPlayer)
 
 
 	ConnectedPlayers.Add(ConnectedPlayer); 
-	UE_LOG(LogTemp, Log, TEXT("PostLogin: Player with ID %i logged in sucessfully"), ConnectedPlayer->PlayerState->GetPlayerId())
+	UE_LOG(LogTemp, Log, TEXT("PostLogin: Player with ID %i logged in successfully"), ConnectedPlayer->PlayerState->GetPlayerId())
 	
 
 	
