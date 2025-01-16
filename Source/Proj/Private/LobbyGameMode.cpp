@@ -14,15 +14,15 @@ void ALobbyGameMode::PostLogin(APlayerController* NewPlayer)
 		return;
 	}
 
-	if(GetGameInstance()->GetAmountOfNoneSpectators() >= NumbersOfNoneSpectators)
+	if(GetGameAfgiInstance()->GetAmountOfNoneSpectators() >= NumbersOfNoneSpectators)
 	{
-		GetGameInstance()->AddSpectator(NewPlayer);
+		GetGameAfgiInstance()->AddSpectator(NewPlayer);
 		SpawnPlayerAsSpectator(NewPlayer);
 		return; 
 	}
 	
-	GetGameInstance()->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
-	SpawnPlayer(NewPlayer, GetGameInstance()->GetPlayerInfo(NewPlayer)); 
+	GetGameAfgiInstance()->AddNewPlayer(NewPlayer, NewPlayer->IsLocalController());
+	SpawnPlayer(NewPlayer, GetGameAfgiInstance()->GetPlayerInfo(NewPlayer)); 
 	// Update all characters
 }
 
@@ -33,11 +33,11 @@ void ALobbyGameMode::Logout(AController* Exiting)
 	{
 		return; 
 	}
-	GetGameInstance()->RemovePlayer(Cast<APlayerController>(Exiting));
+	GetGameAfgiInstance()->RemovePlayer(Cast<APlayerController>(Exiting));
 	RemovePlayer(Cast<APlayerController>(Exiting)); 
 }
 
-UAFGIMain* ALobbyGameMode::GetGameInstance()
+UAFGIMain* ALobbyGameMode::GetGameAfgiInstance()
 {
 	if(GameInstance == nullptr)
 	{
@@ -53,12 +53,12 @@ void ALobbyGameMode::BeginPlay()
 
 void ALobbyGameMode::ChangePlayerCharacter(APlayerController* Controller, FName NameOfCharacter)
 {
-	GetGameInstance()->UpdateSelectedPlayer(Controller, NameOfCharacter);
+	GetGameAfgiInstance()->UpdateSelectedPlayer(Controller, NameOfCharacter);
 }
 
 void ALobbyGameMode::SetPLayerAsSpectator(APlayerController* Controller)
 {
-	GetGameInstance()->UpdateSelectedPlayer(Controller, FName("Spectator"));
+	GetGameAfgiInstance()->UpdateSelectedPlayer(Controller, FName("Spectator"));
 }
 
 void ALobbyGameMode::GenericPlayerInitialization(AController* Controller)
@@ -76,11 +76,75 @@ void ALobbyGameMode::GenericPlayerInitialization(AController* Controller)
 	}
 	
 	const auto NewPlayer = Cast<APlayerController>(Controller); 
-	if(!GetGameInstance()->GetConnectedPlayers()->Contains(NewPlayer->PlayerState->GetUniqueId()))
+	if(!GetGameAfgiInstance()->GetConnectedPlayers()->Contains(NewPlayer->PlayerState->GetUniqueId()))
 	{
 		return; 
 	}
-	SpawnPlayer(NewPlayer, GetGameInstance()->GetPlayerInfo(NewPlayer)); 
+	SpawnPlayer(NewPlayer, GetGameAfgiInstance()->GetPlayerInfo(NewPlayer)); 
+}
+
+void ALobbyGameMode::SetReadyStateForPlayer(const APlayerController* PlayerController, const bool IsReady)
+{
+	ReadyList.Add(PlayerController, IsReady);
+	OnReadyStateChanged(PlayerController, IsReady); 
+}
+
+bool ALobbyGameMode::GetReadyStateForPlayer(const APlayerController* PlayerController)
+{
+	if(!ReadyList.Contains(PlayerController))
+	{
+		ReadyList.Add(PlayerController, false);
+	}
+	
+	return ReadyList[PlayerController];
+}
+
+bool ALobbyGameMode::ArePlayersReady() const
+{
+
+	
+	
+	for (const auto PresenceKey : ReadyList)
+	{
+		if(PresenceKey.Key == nullptr)
+		{
+			continue;
+		}
+
+		const auto PlayerInfo = GameInstance->GetPlayerInfo(PresenceKey.Key);
+
+		if(!PlayerInfo.SelectedCharacter.IsValid())
+		{
+			continue; 
+		}
+
+		if(PlayerInfo.SelectedCharacter == FName("Spectator"))
+		{
+			continue;
+		}
+		
+		if (!PresenceKey.Value)
+		{
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+void ALobbyGameMode::RemoveReadyState(const APlayerController* Controller)
+{
+	if(Controller == nullptr)
+	{
+		return;
+	}
+	
+	if(!ReadyList.Contains(Controller))
+	{
+		return;
+	}
+	
+	ReadyList.Remove(Controller);
 }
 
 bool ALobbyGameMode::MaxPlayersReached() const
